@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>f1nancy - Sistema de Controle de Finanças (v1)</title>
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+    <header id="header">
+        <div class="main_nav">
+          <div class="container">
+            <div class="mobile-toggle"> <span></span> <span></span> <span></span> </div>
+            <nav>
+              <ul>
+                <li><a class="smoothscroll" href="#header">Início</a></li>
+                <li><a class="smoothscroll" href="#about">Sobre</a></li>
+                <li><a class="smoothscroll" href="#controle-receitas-despesas">Controle Receita e Despesa</a></li>
+                <li><a class="smoothscroll" href="#portfolio">teste</a></li>
+                <li><a class="smoothscroll" href="#contact">teste</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <div class="title">
+          <div><span class="typcn typcn-heart-outline icon heading"></span></div>
+          <div class="smallsep heading"></div>
+          <h1 class="heading"> f1nancy</h1>
+          <h2 class="heading">sistema de gerenciamento de finanças pessoal</h2>
+          <a class="smoothscroll" href="#about">
+          <div class="mouse">
+            <div class="wheel"></div>
+          </div>
+          </a> </div>
+        <a class="smoothscroll" href="#about">
+        <div class="scroll-down"></div>
+        </a> </header>
+
+        <!-- About Section
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->  
+  
+<section id="about">
+    <div class="container">
+      <div class="row">
+        <h1>Sobre</h1>
+        <div class="block"></div>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <h3><span class="typcn typcn-device-desktop icon"></span>Proposta</h3>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+        <div class="six columns">
+          <h3><span class="typcn typcn-pen icon"></span>Ideias</h3>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+        <div class="row">
+          <div class="six columns">
+            <h3><span class="typcn typcn-cog-outline icon"></span>Metas</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+          </div>
+          <div class="six columns">
+            <h3><span class="typcn typcn-lightbulb icon"></span>Próximas atualizações</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+          <!-- Receitas-Despesas Section
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->  
+
+    <main>
+        <section id="controle-receitas-despesas">
+            <div class="container">
+                <h2>Controle de Receitas e Despesas</h2>
+                <div class="transaction-form">
+                    <h3>Lançamento de Transações</h3>
+                    <div class="block1"></div>
+                    <form id="transaction-form">
+                        <label for="date">Data:</label>
+                        <input type="date" id="date" name="date" required>
+                        
+                        <label for="value">Valor:</label>
+                        <input type="number" id="value" name="value" step="0.01" required>
+                        
+                        <label for="description">Descrição:</label>
+                        <input type="text" id="description" name="description" required>
+                        
+                        <label for="category">Categoria:</label>
+                        <input type="text" id="category" name="category" required>
+                        
+                        <label for="subcategory">Subcategoria:</label>
+                        <input type="text" id="subcategory" name="subcategory">
+                        
+                        <label for="account">Conta Bancária/Carteira:</label>
+                        <select id="account" name="account" required>
+                            <option value="" disabled selected>Selecione uma opção</option>
+                            <option value="conta-corrente">Conta Corrente</option>
+                            <option value="conta-poupanca">Conta Poupança</option>
+                            <option value="cartao-credito">Cartão de Crédito</option>
+                        </select>
+                        <label for="paymentMethod">Método de Pagamento:</label>
+                        <select id="paymentMethod" name="payment_method" required>
+                            <option value="" disabled selected>Selecione o método de pagamento</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="cartao-debito">Cartão de Débito</option>
+                            <option value="cartao-credito">Cartão de Crédito</option>
+                            <option value="transferencia">Transferência Bancária</option>
+                        </select>
+
+                        <label for="transactionType">Tipo de Transação:</label>
+                        <select id="transactionType" name="transaction_type" required>
+                            <option value="" disabled selected>Selecione o tipo de transação</option>
+                            <option value="receita">Receita</option>
+                            <option value="despesa">Despesa</option>
+                        </select>
+                        
+                        <button type="submit">Lançar Transação</button>
+                    </form>
+                </div>
+            
+                <!-- Modal de Edição -->
+<div id="editModal" class="modal">
+  <div class="modal-content container">
+      <span class="close">&times;</span>
+      <form id="edit-transaction-form">
+          <label for="edit-date">Data:</label>
+          <input type="date" id="edit-date" name="date" required>
+          
+          <label for="edit-value">Valor:</label>
+          <input type="number" id="edit-value" name="value" step="0.01" required>
+          
+          <label for="edit-description">Descrição:</label>
+          <input type="text" id="edit-description" name="description" required>
+          
+          <label for="edit-category">Categoria:</label>
+          <input type="text" id="edit-category" name="category" required>
+          
+          <label for="edit-subcategory">Subcategoria:</label>
+          <input type="text" id="edit-subcategory" name="subcategory">
+          
+          <label for="edit-account">Conta Bancária/Carteira:</label>
+          <select id="edit-account" name="account" required>
+              <option value="" disabled selected>Selecione uma opção</option>
+              <option value="conta-corrente">Conta Corrente</option>
+              <option value="conta-poupanca">Conta Poupança</option>
+              <option value="cartao-credito">Cartão de Crédito</option>
+          </select>
+
+          <label for="edit-paymentMethod">Método de Pagamento:</label>
+          <select id="edit-paymentMethod" name="payment_method" required>
+              <option value="" disabled selected>Selecione o método de pagamento</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="cartao-debito">Cartão de Débito</option>
+              <option value="cartao-credito">Cartão de Crédito</option>
+              <option value="transferencia">Transferência Bancária</option>
+          </select>
+
+          <label for="edit-transactionType">Tipo de Transação:</label>
+          <select id="edit-transactionType" name="transaction_type" required>
+              <option value="" disabled selected>Selecione o tipo de transação</option>
+              <option value="receita">Receita</option>
+              <option value="despesa">Despesa</option>
+          </select>
+          
+          <button type="button" class="btn-td" onclick="submitEditForm()">Salvar Alterações</button>
+      </form>
+  </div>
+</div>
+
+                
+                <!-- Tabela para exibir transações -->
+                <div class="container">
+                  <form id="filter-form">
+                    <label for="start-date">Data Inicial:</label>
+                    <input type="date" id="start-date" name="start_date">
+                    
+                    <label for="end-date">Data Final:</label>
+                    <input type="date" id="end-date" name="end_date">
+                    
+                    <label for="filter-category">Categoria:</label>
+                    <input type="text" id="filter-category" name="category">
+                    
+                    <label for="filter-subcategory">Subcategoria:</label>
+                    <input type="text" id="filter-subcategory" name="subcategory">
+                    
+                    <label for="filter-account">Conta:</label>
+                    <select id="filter-account" name="account">
+                        <option value="">Todas as contas</option>
+                        <option value="conta-corrente">Conta Corrente</option>
+                        <option value="conta-poupanca">Conta Poupança</option>
+                        <option value="cartao-credito">Cartão de Crédito</option>
+                    </select>
+                
+                    <label for="filter-paymentMethod">Método de Pagamento:</label>
+                    <select id="filter-paymentMethod" name="payment_method">
+                        <option value="">Todos os métodos</option>
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="cartao-debito">Cartão de Débito</option>
+                        <option value="cartao-credito">Cartão de Crédito</option>
+                        <option value="transferencia">Transferência Bancária</option>
+                    </select>
+                
+                    <label for="filter-transactionType">Tipo de Transação:</label>
+                    <select id="filter-transactionType" name="transaction_type">
+                        <option value="">Todos os tipos</option>
+                        <option value="receita">Receita</option>
+                        <option value="despesa">Despesa</option>
+                    </select>
+                
+                    <button type="button" onclick="applyFilters()">Aplicar Filtros</button>
+                    <button id="clear-filters-btn">Limpar Filtros</button>
+                </form>
+                
+
+    <table id="transaction-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Subcategoria</th>
+                <th>Conta</th>
+                <th>Método de Pagamento</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+            <tbody>
+                <!-- Linhas da tabela serão adicionadas dinamicamente pelo JavaScript -->
+            </tbody>
+            
+        </table>
+        <div id="pagination-container">
+          <button id="prev-page">Página Anterior</button>
+          <span id="current-page">1</span>
+          <button id="next-page">Próxima Página</button>
+      </div>
+      
+            
+      <div class="container" id="dashboard">
+        <h2>Saldo Atual: <span id="current-balance">R$ 0.00</span></h2>
+        <h2>Receitas Totais: <span id="total-revenue">R$ 0.00</span></h2>
+        <h2>Despesas Totais: <span id="total-expenses">R$ 0.00</span></h2>
+    </div>
+    <div>
+        <canvas id="expenses-chart"></canvas>
+        <canvas id="revenue-chart"></canvas>
+    </div>
+    <div>
+        <h2>Despesas Mensais</h2>
+        <canvas id="monthly-expenses-chart"></canvas>
+    </div>
+
+    </main>
+    
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 f1nancy - Sistema de Controle de Finanças (v1)</p>
+        </div>
+    </footer>
+
+    <script src="/frontend.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/nice.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+</body>
+</html>
