@@ -106,29 +106,117 @@ async function deleteTransaction(id) {
     }
 }
 
-// Função para abrir o modal de edição com o ID da transação
-function openEditModal(id) {
-    const modal = document.getElementById('editModal');
-    modal.style.display = 'block';
+// // Função para abrir o modal de edição com o ID da transação
+// function openEditModal(id) {
+//     const modal = document.getElementById('editModal');
+//     modal.style.display = 'block';
 
-    // Adicione o ID da transação ao formulário de edição
-    document.getElementById('edit-transaction-form').setAttribute('data-transaction-id', id);
+//     // Adicione o ID da transação ao formulário de edição
+//     document.getElementById('edit-transaction-form').setAttribute('data-transaction-id', id);
+// }
+
+// // Evento de clique no botão "Editar" para abrir o modal
+// document.addEventListener('click', function(e) {
+//     if (e.target && e.target.textContent === 'Editar') {
+//         const id = e.target.dataset.transactionId; // Obter o ID da transação
+//         openEditModal(id);
+//     }
+// });
+
+// // Fechar o modal ao clicar no botão de fechar (X)
+// const closeBtn = document.querySelector('.close');
+// closeBtn.addEventListener('click', function() {
+//     const modal = document.getElementById('editModal');
+//     modal.style.display = 'none';
+// });
+
+
+// Função para abrir o modal de edição e buscar os detalhes da transação
+function openEditModal(transactionId) {
+    // Obter os dados da transação usando o ID
+    fetch(`/transactions/${transactionId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Preencher o formulário de edição com os dados da transação
+            document.getElementById('edit-date').value = data.date;
+            document.getElementById('edit-value').value = data.value;
+            document.getElementById('edit-description').value = data.description;
+            document.getElementById('edit-category').value = data.category;
+            document.getElementById('edit-subcategory').value = data.subcategory;
+            document.getElementById('edit-account').value = data.account;
+            document.getElementById('edit-paymentMethod').value = data.payment_method;
+            document.getElementById('edit-transactionType').value = data.transaction_type;
+
+            // Definir o ID da transação no formulário de edição
+            document.getElementById('edit-transaction-form').setAttribute('data-transaction-id', transactionId);
+
+            // Abrir o modal de edição
+            
+            editModal.style.display = 'block';
+        })
+        .catch(error => console.error('Erro ao obter dados da transação:', error));
 }
 
-// Evento de clique no botão "Editar" para abrir o modal
-document.addEventListener('click', function(e) {
-    if (e.target && e.target.textContent === 'Editar') {
-        const id = e.target.dataset.transactionId; // Obter o ID da transação
-        openEditModal(id);
-    }
-});
 
-// Fechar o modal ao clicar no botão de fechar (X)
-const closeBtn = document.querySelector('.close');
-closeBtn.addEventListener('click', function() {
-    const modal = document.getElementById('editModal');
-    modal.style.display = 'none';
-});
+// Função para buscar detalhes da transação pelo ID
+async function fetchTransactionDetails(transactionId) {
+    try {
+        const response = await fetch(`/transactions/${transactionId}`);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar detalhes da transação');
+        }
+        const transactionDetails = await response.json();
+        return transactionDetails;
+    } catch (error) {
+        console.error('Erro ao buscar detalhes da transação:', error.message);
+        return null;
+    }
+}
+
+
+
+// Função para preencher o modal de edição com os detalhes da transação
+function fillEditModal(transaction) {
+    if (!transaction) {
+        console.error('Detalhes da transação não encontrados');
+        return;
+    }
+
+    // Converter a data para o formato 'yyyy-MM-dd'
+    const date = new Date(transaction.date);
+    const formattedDate = date.toISOString().split('T')[0];
+
+    // Preencher os campos do modal com os detalhes da transação
+    document.getElementById('edit-date').value = formattedDate;
+    document.getElementById('edit-value').value = transaction.value;
+    document.getElementById('edit-description').value = transaction.description;
+    document.getElementById('edit-category').value = transaction.category;
+    document.getElementById('edit-subcategory').value = transaction.subcategory;
+    document.getElementById('edit-account').value = transaction.account;
+    document.getElementById('edit-paymentMethod').value = transaction.payment_method;
+    document.getElementById('edit-transactionType').value = transaction.transaction_type;
+
+    // Exibir o modal de edição
+    const editModal = document.getElementById('editModal');
+    editModal.style.display = 'block';
+
+    console.log('Método de Pagamento:', transaction.payment_method);
+    console.log('Tipo:', transaction.transaction_type);
+    console.log('Data da transação:', formattedDate);
+
+}
+
+
+
+
+// Event listener para o botão de fechar do modal
+document.querySelector('.close').onclick = closeModal;
+
+// Função para fechar o modal quando o usuário clicar no botão de fechar ou fora do modal
+function closeModal() {
+    const editModal = document.getElementById('editModal');
+    editModal.style.display = 'none';
+}
 
 // Função para enviar o formulário de edição
 function submitEditForm() {
@@ -170,6 +258,22 @@ function submitEditForm() {
     });
 }
 
+
+
+
+function closeEditModal() {
+    const editModal = document.getElementById('editModal');
+    editModal.style.display = 'none';
+}
+
+
+// Event listener para fechar o modal quando o usuário clicar fora do modal
+window.onclick = function(event) {
+    const editModal = document.getElementById('editModal');
+    if (event.target == editModal) {
+        closeModal();
+    }
+}
 
 // Lidar com adição, edição e exclusão de transações como antes
 document.addEventListener('DOMContentLoaded', () => {
@@ -294,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${transaction.id}</td>
+
                     <td>${formattedDate}</td> <!-- Utilizar a data formatada aqui -->
                     <td>${transaction.value.toFixed(2)}</td> <!-- Arredondar o valor para duas casas decimais -->
                     <td>${transaction.description}</td>
@@ -437,7 +541,6 @@ function updateTransactionTable(transactions) {
         const row = document.createElement('tr');
         // Preencher a linha da tabela com os dados da transação
         row.innerHTML = `
-            <td>${transaction.id}</td>
             <td>${formattedDate}</td> <!-- Utilizar a data formatada aqui -->
             <td>${transaction.value.toFixed(2)}</td>
             <td>${transaction.description}</td>
@@ -447,8 +550,8 @@ function updateTransactionTable(transactions) {
             <td>${transaction.payment_method}</td>
             <td>${transaction.transaction_type}</td>
             <td>
-                <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
-                <button class="btn-td" onclick="deleteTransaction(${transaction.id})">Excluir</button>
+            <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
+            <button class="btn-td" onclick="deleteTransaction(${transaction.id})">Excluir</button>
             </td>
         `;
         tbody.appendChild(row);

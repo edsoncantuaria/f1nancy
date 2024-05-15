@@ -168,6 +168,26 @@ app.post('/transactions', isAuthenticated, (req, res) => {
     });
 });
 
+// // Rota GET para buscar uma transação específica para edição
+// app.get('/transactions/:id', isAuthenticated, (req, res) => {
+//     const userId = req.session.userId;
+//     const id = req.params.id;
+//     const sql = `SELECT * FROM transacao WHERE id=? AND user_id=?`;
+//     connection.query(sql, [id, userId], (err, result) => {
+//         if (err) {
+//             console.error('Erro ao buscar transação para edição:', err);
+//             res.status(500).json({ error: 'Erro ao buscar transação para edição' });
+//         } else {
+//             if (result.length > 0) {
+//                 res.status(200).json(result[0]);
+//             } else {
+//                 res.status(404).json({ error: 'Transação não encontrada' });
+//             }
+//         }
+//     });
+// });
+
+
 // Rota GET para buscar uma transação específica para edição
 app.get('/transactions/:id', isAuthenticated, (req, res) => {
     const userId = req.session.userId;
@@ -187,6 +207,9 @@ app.get('/transactions/:id', isAuthenticated, (req, res) => {
     });
 });
 
+
+
+
 // Rota PUT para editar uma transação existente
 app.put('/transactions/:id', isAuthenticated, (req, res) => {
     const userId = req.session.userId;
@@ -203,6 +226,7 @@ app.put('/transactions/:id', isAuthenticated, (req, res) => {
         }
     });
 });
+
 
 
 // Rota DELETE para excluir uma transação existente
