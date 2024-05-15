@@ -1,242 +1,108 @@
-// Elementos HTML para controle de paginação
-const prevPageBtn = document.getElementById('prev-page');
-const nextPageBtn = document.getElementById('next-page');
-const currentPageDisplay = document.getElementById('current-page');
+// Lidar com o registro de usuário
 
+document.getElementById('registerForm')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const username = form.username.value;
+    const email = form.email.value;
+    const password = form.password.value;
 
-// Variáveis de controle de página
-let currentPage = 1;
+    const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+    });
 
-// Função para buscar e exibir transações da página atual
-
-function fetchAndDisplayCurrentPageTransactions() {
-    fetch(`/transactions?page=${currentPage}&limit=${transactionsPerPage}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro ao buscar transações');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const { transactions, totalPages } = data;
-            if (currentPage > totalPages) {
-                currentPage = totalPages; // Bloqueia a ida das transações paginadas
-            } else if (currentPage > 1) {
-                currentPage = 1; // Bloqueia a navegação para a segunda página
-            }
-            displayTransactions(transactions);
-            updatePaginationButtons(currentPage, totalPages);
-        })
-        .catch(error => {
-            console.error('Erro ao buscar transações:', error);
-        });
-}
-
-
-// async function fetchAndDisplayCurrentPageTransactions() {
-//     try {
-//         const response = await fetch(`/transactions?page=${currentPage}&limit=10`);
-//         if (!response.ok) {
-//             throw new Error('Erro ao buscar transações');
-//         }
-
-//         const data = await response.json();
-//         updateTransactionTable(data);
-//     } catch (error) {
-//         console.error('Erro ao buscar transações:', error.message);
-//     }
-// }
-
-// Função para atualizar a exibição da página atual
-function updateCurrentPageDisplay() {
-    currentPageDisplay.textContent = currentPage;
-}
-
-
-
-// Event listeners para os botões de páginação
-prevPageBtn.addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
-        updateCurrentPageDisplay();
-        fetchAndDisplayCurrentPageTransactions();
+    const result = await response.json();
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = 'login.html';
+    } else {
+        alert(result.error);
     }
 });
 
-nextPageBtn.addEventListener('click', () => {
-    currentPage++;
-    updateCurrentPageDisplay();
-    fetchAndDisplayCurrentPageTransactions();
+// Lidar com o login de usuário
+document.getElementById('loginForm')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const username = form.username.value;
+    const password = form.password.value;
+
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = 'index.html';
+    } else {
+        alert(result.error);
+    }
 });
 
-// // Chamar a função para buscar e exibir transações da página inicial ao carregar a página
-// document.addEventListener('DOMContentLoaded', async () => {
-//     await fetchAndDisplayCurrentPageTransactions();
-// });
+// Lidar com o logout de usuário
+document.getElementById('logoutButton')?.addEventListener('click', async () => {
+    const response = await fetch('/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = 'login.html';
+    } else {
+        alert(result.error);
+    }
+});
+
+// Lidar com o Botão de Registro de usuário
+document.getElementById('loginButton')?.addEventListener('click', async () => {
+    window.location.href = 'login.html';
+
+});
+// Lidar com o Botão de Registro de usuário
+document.getElementById('registerButton')?.addEventListener('click', async () => {
+        window.location.href = 'register.html';
+
+});
 
 
+// Logout
+    document.getElementById('logout-button').addEventListener('click', () => {
+        fetch('/logout', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    window.location.href = '/login.html';
+                }
+            })
+            .catch(error => console.error('Erro ao fazer logout:', error));
+    });
 
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await fetchTransactions();
-    
-    const form = document.getElementById('transaction-form');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(form);
-
+// Função para excluir uma transação pelo ID
+async function deleteTransaction(id) {
+    if (confirm('Tem certeza que deseja excluir esta transação?')) {
         try {
-            const response = await fetch('/transactions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(Object.fromEntries(formData))
+            const response = await fetch(`/transactions/${id}`, {
+                method: 'DELETE'
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao adicionar transação');
+                throw new Error('Erro ao excluir transação');
             }
 
             const data = await response.json();
-            addTransactionRow(data);
-        } catch (error) {
-            console.error('Erro ao adicionar transação:', error.message);
-        }
-    });
-});
-
-async function fetchTransactions() {
-    try {
-        const response = await fetch('/transactions');
-        if (!response.ok) {
-            throw new Error('Erro ao buscar transações');
-        }
-
-        const data = await response.json();
-        data.forEach(transaction => {
-            if (transaction.date) {
-                addTransactionRow(transaction);
-            } else {
-                console.error('Erro ao buscar transações: data da transação é nula');
-            }
-        });
-    } catch (error) {
-        console.error('Erro ao buscar transações:', error.message);
-    }
-}
-
-  
-function addTransactionRow(transaction) {
-    const tbody = document.querySelector('#transaction-table tbody');
-    const row = document.createElement('tr');
-
-    // Extrair apenas o dia, mês e ano da data
-    const dateParts = transaction.date.split('T')[0].split('-');
-    const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-
-    // Mapear valores nulos para strings correspondentes
-    const paymentMethod = transaction.payment_method ? transaction.payment_method : '-';
-    const transactionType = transaction.transaction_type ? transaction.transaction_type : '-';
-
-    row.innerHTML = `
-        <td>${transaction.id}</td>
-        <td>${formattedDate}</td>
-        <td>${transaction.value}</td>
-        <td>${transaction.description}</td>
-        <td>${transaction.category}</td>
-        <td>${transaction.subcategory}</td>
-        <td>${transaction.account}</td>
-        <td>${paymentMethod}</td>
-        <td>${transactionType}</td>
-        <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
-        <button class="btn-td" onclick="deleteRow(${transaction.id})">Excluir</button>
-    </td>
-`;
-
-tbody.appendChild(row);
-}
-
-
-// function editRow(id) {
-//     fetch(`/transactions/${id}`)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Erro ao buscar transação para edição');
-//             }
-//             return response.json();
-//         })
-//         .then(transaction => {
-//             const { date, value, description, category, subcategory, account, paymentMethod, transactionType } = transaction;
-
-//             // Abre um formulário de edição com os campos disponíveis para edição
-//             const newData = prompt('Digite os novos dados da transação no formato: data, valor, descrição, categoria, subcategoria, conta, método de pagamento, tipo de transação (deixe em branco para manter o valor original)', `${date}, ${value}, ${description}, ${category}, ${subcategory}, ${account}, ${paymentMethod}, ${transactionType}`);
-//             if (newData !== null) {
-//                 const [newDate, newValue, newDescription, newCategory, newSubcategory, newAccount, newPaymentMethod, newTransactionType] = newData.split(',').map(item => item.trim());
-
-//                 // Converter a data para o formato correto (YYYY-MM-DD)
-//                 const formattedDate = newDate ? new Date(newDate).toISOString().split('T')[0] : date;
-
-//                 const editedData = {
-//                     date: formattedDate,
-//                     value: newValue !== '' ? newValue : value,
-//                     description: newDescription !== '' ? newDescription : description,
-//                     category: newCategory !== '' ? newCategory : category,
-//                     subcategory: newSubcategory !== '' ? newSubcategory : subcategory,
-//                     account: newAccount !== '' ? newAccount : account,
-//                     paymentMethod: newPaymentMethod !== '' ? newPaymentMethod : paymentMethod,
-//                     transactionType: newTransactionType !== '' ? newTransactionType : transactionType
-//                 };
-
-//                 fetch(`/transactions/${id}`, {
-//                     method: 'PUT',
-//                     headers: {
-//                         'Content-Type': 'application/json'
-//                     },
-//                     body: JSON.stringify(editedData)
-//                 })
-//                 .then(response => {
-//                     if (!response.ok) {
-//                         throw new Error('Erro ao editar transação');
-//                     }
-//                     return response.json();
-//                 })
-//                 .then(data => {
-//                     console.log('Transação editada:', data);
-//                     location.reload(); // Recarregar a página após a edição
-//                 })
-//                 .catch(error => {
-//                     console.error('Erro ao editar transação:', error.message);
-//                 });
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Erro ao buscar transação para edição:', error.message);
-//         });
-// }
-
-
-
-function deleteRow(id) {
-    if (confirm('Tem certeza que deseja excluir esta transação?')) {
-        fetch(`/transactions/${id}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro ao excluir transação');
-            }
-            return response.json();
-        })
-        .then(data => {
             console.log('Transação excluída:', data);
             location.reload(); // Recarregar a página após a exclusão
-        })
-        .catch(error => {
+        } catch (error) {
             console.error('Erro ao excluir transação:', error.message);
-        });
+        }
     }
 }
 
@@ -249,7 +115,6 @@ function openEditModal(id) {
     document.getElementById('edit-transaction-form').setAttribute('data-transaction-id', id);
 }
 
-
 // Evento de clique no botão "Editar" para abrir o modal
 document.addEventListener('click', function(e) {
     if (e.target && e.target.textContent === 'Editar') {
@@ -258,14 +123,12 @@ document.addEventListener('click', function(e) {
     }
 });
 
-
 // Fechar o modal ao clicar no botão de fechar (X)
 const closeBtn = document.querySelector('.close');
 closeBtn.addEventListener('click', function() {
     const modal = document.getElementById('editModal');
     modal.style.display = 'none';
 });
-
 
 // Função para enviar o formulário de edição
 function submitEditForm() {
@@ -307,20 +170,276 @@ function submitEditForm() {
     });
 }
 
+
+// Lidar com adição, edição e exclusão de transações como antes
+document.addEventListener('DOMContentLoaded', () => {
+        // Verificar se o usuário está autenticado
+        fetch('/check-auth')
+        .then(response => response.json())
+        .then(data => {
+            const userInfo = document.getElementById('user-info');
+            const logoutButton = document.getElementById('logout-button');
+            const loginButton = document.getElementById('loginButton');
+            const registerButton = document.getElementById('registerButton');
+
+            if (data.loggedIn) {
+                userInfo.textContent = `Bem-vindo, ${data.username}`;
+                logoutButton.style.display = 'inline';
+                loginButton.style.display = 'none'; // Esconder botão de login
+                registerButton.style.display = 'none'; // Esconder botão de registro
+            } else {
+                userInfo.textContent = '';
+                logoutButton.style.display = 'none';
+                loginButton.style.display = 'inline'; // Mostrar botão de login
+                registerButton.style.display = 'inline'; // Mostrar botão de registro
+            }
+        })
+        .catch(error => console.error('Erro ao verificar autenticação:', error));
+
+    if (window.location.pathname === '/index.html') {
+        loadTransactions();
+    }
+
+    document.getElementById('addTransactionForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const transactionData = {
+            date: form.date.value,
+            value: form.value.value,
+            description: form.description.value,
+            category: form.category.value,
+            subcategory: form.subcategory.value,
+            account: form.account.value,
+            payment_method: form.paymentMethod.value,
+            transaction_type: form.transactionType.value,
+        };
+
+        const transactionId = form.dataset.transactionId;
+
+        try {
+            let response;
+            if (transactionId) {
+                // Editar transação existente
+                response = await fetch(`/transactions/${transactionId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(transactionData),
+                });
+            } else {
+                // Adicionar nova transação
+                response = await fetch('/transactions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(transactionData),
+                });
+            }
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(transactionId ? 'Transação editada com sucesso' : 'Transação adicionada com sucesso');
+                loadTransactions();
+                form.reset();
+                form.querySelector('button[type="submit"]').innerText = 'Adicionar Transação';
+                delete form.dataset.transactionId;
+            } else {
+                alert(data.error);
+            }
+        } catch (error) {
+            console.error('Erro ao salvar transação:', error);
+        }
+    });
+
+
+
+     // Variáveis para controle de paginação
+     let currentPage = 1;
+     const transactionsPerPage = 10;
+     let totalTransactions = 0;
+
+ 
+     // Event listener para botão de página anterior
+     const prevPageBtn = document.getElementById('prevPageBtn');
+     prevPageBtn.addEventListener('click', () => {
+         if (currentPage > 1) {
+             currentPage--;
+             loadTransactions();
+         }
+     });
+ 
+     // Event listener para botão de próxima página
+     const nextPageBtn = document.getElementById('nextPageBtn');
+     nextPageBtn.addEventListener('click', () => {
+         const totalPages = Math.ceil(totalTransactions / transactionsPerPage);
+         if (currentPage < totalPages) {
+             currentPage++;
+             loadTransactions();
+         }
+     });
+
+
+     async function loadTransactions() {
+        try {
+            const response = await fetch('/transactions');
+            const transactions = await response.json();
+            totalTransactions = transactions.length;
+            const transactionsTableBody = document.getElementById('transactionsTableBody');
+            transactionsTableBody.innerHTML = '';
+    
+            const startIndex = (currentPage - 1) * transactionsPerPage;
+            const endIndex = startIndex + transactionsPerPage;
+            const paginatedTransactions = transactions.slice(startIndex, endIndex);
+    
+            paginatedTransactions.forEach(transaction => {
+                const formattedDate = new Date(transaction.date).toLocaleDateString('pt-BR'); // Formatar a data adequadamente
+    
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${transaction.id}</td>
+                    <td>${formattedDate}</td> <!-- Utilizar a data formatada aqui -->
+                    <td>${transaction.value.toFixed(2)}</td> <!-- Arredondar o valor para duas casas decimais -->
+                    <td>${transaction.description}</td>
+                    <td>${transaction.category}</td>
+                    <td>${transaction.subcategory}</td>
+                    <td>${transaction.account}</td>
+                    <td>${transaction.payment_method}</td>
+                    <td>${transaction.transaction_type}</td>
+                    <td>
+                        <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
+                        <button class="btn-td" onclick="deleteRow(${transaction.id})">Excluir</button>
+                    </td>
+                `;
+                transactionsTableBody.appendChild(row);
+            });
+    
+            updatePaginationUI(transactions.length);
+        } catch (error) {
+            console.error('Erro ao carregar transações:', error);
+        }
+    }
+    
+
+    // Função para atualizar a interface de paginação
+    function updatePaginationUI(totalTransactions) {
+        const totalPages = Math.ceil(totalTransactions / transactionsPerPage);
+        const pageNumbersContainer = document.getElementById('pageNumbers');
+        pageNumbersContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageNumberBtn = document.createElement('button');
+            pageNumberBtn.textContent = i;
+            pageNumberBtn.classList.add('page-btn');
+            if (i === currentPage) {
+                pageNumberBtn.classList.add('active');
+            }
+            pageNumberBtn.addEventListener('click', () => {
+                currentPage = i;
+                loadTransactions();
+            });
+            pageNumbersContainer.appendChild(pageNumberBtn);
+        }
+    }
+
+    // Funções relacionadas a editar e excluir transações
+    async function editTransaction(id) {
+        // Função para abrir o modal de edição com o ID da transação
+function openEditModal(id) {
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'block';
+
+    // Adicione o ID da transação ao formulário de edição
+    document.getElementById('edit-transaction-form').setAttribute('data-transaction-id', id);
+}
+
+// Função para enviar o formulário de edição
+async function submitEditForm() {
+    const id = document.getElementById('edit-transaction-form').getAttribute('data-transaction-id'); // Obter o ID da transação do atributo data-transaction-id
+
+    const editedData = {
+        date: document.getElementById('edit-date').value,
+        value: document.getElementById('edit-value').value,
+        description: document.getElementById('edit-description').value,
+        category: document.getElementById('edit-category').value,
+        subcategory: document.getElementById('edit-subcategory').value,
+        account: document.getElementById('edit-account').value,
+        paymentMethod: document.getElementById('edit-paymentMethod').value,
+        transactionType: document.getElementById('edit-transactionType').value
+    };
+
+    try {
+        const response = await fetch(`/transactions/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(editedData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao editar transação');
+        }
+
+        const data = await response.json();
+        console.log('Transação editada:', data);
+        location.reload(); // Recarregar a página após a edição
+    } catch (error) {
+        alert('Erro ao editar: escreva em todos os campos');
+        console.error('Erro ao editar transação:', error.message);
+    }
+}
+
+// Evento de clique no botão "Editar" para abrir o modal
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.textContent === 'Editar') {
+        const id = e.target.dataset.transactionId; // Obter o ID da transação
+        openEditModal(id);
+    }
+});
+
+// Fechar o modal ao clicar no botão de fechar (X)
+const closeBtn = document.querySelector('.close');
+closeBtn.addEventListener('click', function() {
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'none';
+});
+
+    }
+
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('btn-delete')) {
+            const id = e.target.dataset.transactionId; // Obter o ID da transação
+            deleteTransaction(id); // Chamar a função para excluir a transação
+        }
+    });
+
+    // Carregar transações ao carregar a página
+    loadTransactions();
+});
+
+
+
+
+// Evento de clique no botão "Aplicar Filtros"
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'apply-filters-btn') {
+        applyFilters();
+    }
+});
+
+// Função para atualizar a tabela de transações com os dados filtrados
 function updateTransactionTable(transactions) {
     const tbody = document.querySelector('#transaction-table tbody');
     tbody.innerHTML = ''; // Limpar o conteúdo atual da tabela
 
     transactions.forEach(transaction => {
         // Formatar a data para exibir apenas a parte da data (sem o horário)
-        const formattedDate = new Date(transaction.date).toISOString().split('T')[0];
+        const formattedDate = new Date(transaction.date).toLocaleDateString('pt-BR'); // Altere 'pt-BR' para a localização desejada
 
         const row = document.createElement('tr');
         // Preencher a linha da tabela com os dados da transação
         row.innerHTML = `
             <td>${transaction.id}</td>
             <td>${formattedDate}</td> <!-- Utilizar a data formatada aqui -->
-            <td>${transaction.value}</td>
+            <td>${transaction.value.toFixed(2)}</td>
             <td>${transaction.description}</td>
             <td>${transaction.category}</td>
             <td>${transaction.subcategory}</td>
@@ -328,40 +447,13 @@ function updateTransactionTable(transactions) {
             <td>${transaction.payment_method}</td>
             <td>${transaction.transaction_type}</td>
             <td>
-            <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
-            <button class="btn-td" onclick="deleteRow(${transaction.id})">Excluir</button>
+                <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
+                <button class="btn-td" onclick="deleteTransaction(${transaction.id})">Excluir</button>
             </td>
         `;
         tbody.appendChild(row);
     });
 }
-
-
-// async function applyFilters() {
-//     const response = await fetch('/filtered-transactions', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             start_date: document.getElementById('start-date').value,
-//             end_date: document.getElementById('end-date').value,
-//             category: document.getElementById('filter-category').value,
-//             subcategory: document.getElementById('filter-subcategory').value,
-//             account: document.getElementById('filter-account').value,
-//             payment_method: document.getElementById('filter-paymentMethod').value,
-//             transaction_type: document.getElementById('filter-transactionType').value
-//         })
-//     });
-
-//     if (!response.ok) {
-//         throw new Error('Erro ao aplicar filtros');
-//     }
-
-//     const transactions = await response.json();
-//     updateTransactionTable(transactions);
-// }
-
 
 // Função para aplicar os filtros
 function applyFilters() {
@@ -404,7 +496,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Outros códigos...
 
     const clearFiltersBtn = document.getElementById('clear-filters-btn');
-    clearFiltersBtn.addEventListener('click', () => {
+    clearFiltersBtn.addEventListener('click', (event) => {
+        event.preventDefault(); // Evitar o comportamento padrão de envio de formulário
+
         // Limpar os campos dos filtros
         document.getElementById('start-date').value = '';
         document.getElementById('end-date').value = '';
@@ -419,120 +513,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-//Dashboard
-// document.addEventListener('DOMContentLoaded', async () => {
-//     try {
-//       const response = await fetch('/dashboard-data');
-//       if (!response.ok) {
-//         throw new Error('Erro ao buscar dados do dashboard');
-//       }
-//       const data = await response.json();
-//       updateDashboard(data);
-//     } catch (error) {
-//       console.error('Erro ao carregar dados do dashboard:', error.message);
-//     }
-//   });
-  
-//   function updateDashboard(data) {
-//     document.getElementById('current-balance').textContent = `Saldo Atual: R$ ${data.currentBalance.toFixed(2)}`;
-//     document.getElementById('total-revenue').textContent = `Receitas Totais: R$ ${data.totalRevenue.toFixed(2)}`;
-//     document.getElementById('total-expenses').textContent = `Despesas Totais: R$ ${data.totalExpenses.toFixed(2)}`;
 
-//     // Verifique se expensesByCategory é um array antes de usar map
-//     if (Array.isArray(data.expensesByCategory)) {
-//         // Mapeie os dados apenas se expensesByCategory for um array
-//         createBarChart('expenses-chart', data.expensesByCategory, 'Despesas por Categoria');
-//     } else {
-//         console.error('Erro: Os dados de expensesByCategory não são um array.');
-//     }
+// Chame loadTransactions ao carregar a página inicial
+if (window.location.pathname === '/') {
+    loadTransactions();
+}
 
-//     // Verifique se revenueByCategory é um array antes de usar map
-//     if (Array.isArray(data.revenueByCategory)) {
-//         // Mapeie os dados apenas se revenueByCategory for um array
-//         createBarChart('revenue-chart', data.revenueByCategory, 'Receitas por Categoria');
-//     } else {
-//         console.error('Erro: Os dados de revenueByCategory não são um array.');
-//     }
-// }
 
-// function createBarChart(chartId, data, label) {
-//     const ctx = document.getElementById(chartId).getContext('2d');
-//     new Chart(ctx, {
-//         type: 'bar',
-//         data: {
-//             labels: data.map(item => item.category),
-//             datasets: [{
-//                 label: label,
-//                 data: data.map(item => item.total),
-//                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
-//                 borderColor: 'rgba(54, 162, 235, 1)',
-//                 borderWidth: 1
-//             }]
-//         },
-//         options: {
-//             scales: {
-//                 y: {
-//                     beginAtZero: true,
-//                     ticks: {
-//                         callback: value => `R$ ${value.toFixed(2)}`
-//                     }
-//                 }
-//             }
-//         }
-//     });
-// }
+// Carregar dados do dashboard
+async function loadDashboardData() {
+    try {
+        const response = await fetch('/dashboard-data');
+        const data = await response.json();
 
-// Frontend (frontend.js)
+        document.getElementById('currentBalance').textContent = data.currentBalance;
+        document.getElementById('totalRevenue').textContent = data.totalRevenue;
+        document.getElementById('totalExpenses').textContent = data.totalExpenses;
 
-// document.addEventListener('DOMContentLoaded', async () => {
-//     try {
-//         const response = await fetch('/dashboard-data');
-//         if (!response.ok) {
-//             throw new Error('Erro ao buscar dados do dashboard');
-//         }
-//         const data = await response.json();
-//         updateDashboard(data);
-//     } catch (error) {
-//         console.error('Erro ao carregar dados do dashboard:', error.message);
-//     }
-// });
+        const expensesByCategory = data.expensesByCategory;
+        const revenueByCategory = data.revenueByCategory;
 
-// function updateDashboard(data) {
-//     document.getElementById('current-balance').textContent = `R$ ${data.currentBalance.toFixed(2)}`;
-//     document.getElementById('total-revenue').textContent = `R$ ${data.totalRevenue.toFixed(2)}`;
-//     document.getElementById('total-expenses').textContent = `R$ ${data.totalExpenses.toFixed(2)}`;
+        const expensesByCategoryElement = document.getElementById('expensesByCategory');
+        expensesByCategoryElement.innerHTML = '';
+        expensesByCategory.forEach(expense => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${expense.category}: ${expense.total}`;
+            expensesByCategoryElement.appendChild(listItem);
+        });
 
-//     createBarChart('expenses-chart', data.expensesByCategory, 'Despesas por Categoria', 'rgba(255, 99, 132, 0.5)', 'rgba(255, 99, 132, 1)');
-//     createBarChart('revenue-chart', data.revenueByCategory, 'Receitas por Categoria', 'rgba(54, 162, 235, 0.5)', 'rgba(54, 162, 235, 1)');
-// }
+        const revenueByCategoryElement = document.getElementById('revenueByCategory');
+        revenueByCategoryElement.innerHTML = '';
+        revenueByCategory.forEach(revenue => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${revenue.category}: ${revenue.total}`;
+            revenueByCategoryElement.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar dados do dashboard:', error);
+    }
+}
 
-// function createBarChart(chartId, data, label, backgroundColor, borderColor) {
-//     const ctx = document.getElementById(chartId).getContext('2d');
-//     new Chart(ctx, {
-//         type: 'bar',
-//         data: {
-//             labels: data.map(item => item.category),
-//             datasets: [{
-//                 label: label,
-//                 data: data.map(item => item.total),
-//                 backgroundColor: backgroundColor,
-//                 borderColor: borderColor,
-//                 borderWidth: 1
-//             }]
-//         },
-//         options: {
-//             scales: {
-//                 y: {
-//                     beginAtZero: true,
-//                     ticks: {
-//                         callback: value => `R$ ${value.toFixed(2)}`
-//                     }
-//                 }
-//             }
-//         }
-//     });
-    
-// }
+
+// Chamar loadDashboardData ao carregar a página inicial
+if (window.location.pathname === '/') {
+    loadDashboardData();
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {

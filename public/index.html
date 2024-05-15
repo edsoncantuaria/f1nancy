@@ -17,8 +17,8 @@
                 <li><a class="smoothscroll" href="#header">Início</a></li>
                 <li><a class="smoothscroll" href="#about">Sobre</a></li>
                 <li><a class="smoothscroll" href="#controle-receitas-despesas">Controle Receita e Despesa</a></li>
-                <li><a class="smoothscroll" href="#portfolio">teste</a></li>
-                <li><a class="smoothscroll" href="#contact">teste</a></li>
+                <li><a class="smoothscroll" href="/login.html">Login</a></li>
+                <li><a class="smoothscroll" href="/register.html">Registrar</a></li>
               </ul>
             </nav>
           </div>
@@ -36,6 +36,17 @@
         <a class="smoothscroll" href="#about">
         <div class="scroll-down"></div>
         </a> </header>
+
+
+         <!-- AUTENTICAR -->
+
+        <div class="container" id="app">
+          <h1>Bem-vindo ao Sistema F1nancy</h1>
+          <div id="user-info"></div>
+          <button id="loginButton">Login</button>
+          <button id="registerButton">Register</button>
+          <button id="logout-button" style="display:none;">Logout</button>
+
 
         <!-- About Section
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->  
@@ -81,7 +92,7 @@
                 <div class="transaction-form">
                     <h3>Lançamento de Transações</h3>
                     <div class="block1"></div>
-                    <form id="transaction-form">
+                    <form id="addTransactionForm">
                         <label for="date">Data:</label>
                         <input type="date" id="date" name="date" required>
                         
@@ -233,16 +244,18 @@
                 <th>Ações</th>
             </tr>
         </thead>
-            <tbody>
+            <tbody id="transactionsTableBody">
                 <!-- Linhas da tabela serão adicionadas dinamicamente pelo JavaScript -->
             </tbody>
             
         </table>
-        <div id="pagination-container">
-          <button id="prev-page">Página Anterior</button>
-          <span id="current-page">1</span>
-          <button id="next-page">Próxima Página</button>
+
+        <div id="pagination" class="pagination">
+          <button id="prevPageBtn" class="page-btn">Anterior</button>
+          <span id="pageNumbers"></span>
+          <button id="nextPageBtn" class="page-btn">Próxima</button>
       </div>
+
       
             
       <div class="container" id="dashboard">
@@ -258,6 +271,7 @@
         <h2>Despesas Mensais</h2>
         <canvas id="monthly-expenses-chart"></canvas>
     </div>
+
 
     </main>
     

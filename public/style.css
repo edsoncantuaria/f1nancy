@@ -1086,7 +1086,8 @@ pre, blockquote, dl, figure, table, p, ul, ol, form {
     background-color: #0056b3;
 }
 
-#pagination-container {
+#pagination-container,
+#pagination {
 	display: flex;
 	justify-content: center;
 	margin-top: 20px;
@@ -1095,6 +1096,8 @@ pre, blockquote, dl, figure, table, p, ul, ol, form {
   }
   
   #prev-page,
+  #prevPageBtn,
+  #nextPageBtn,
   #next-page {
 	padding: 10px 20px;
 	margin: 0 5px;
@@ -1115,12 +1118,13 @@ pre, blockquote, dl, figure, table, p, ul, ol, form {
 	background-color: #0056b3;
   }
   
-  #current-page {
+  #current-page,#pageNumbers {
 	font-weight: bold;
   }
   
   @media only screen and (max-width: 768px) {
-	#pagination-container {
+	#pagination-container,
+	#pagination {
 	  flex-direction: column;
 	  align-items: center;
 	}

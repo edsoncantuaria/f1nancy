@@ -1,0 +1,26 @@
+CREATE TABLE usuario (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE transacao (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  date DATE,
+  value DECIMAL(10, 2),
+  description VARCHAR(255),
+  category VARCHAR(255),
+  subcategory VARCHAR(255),
+  account VARCHAR(255),
+  paymentMethod VARCHAR(255),
+  type VARCHAR(255),
+  payment_method VARCHAR(255),
+  transaction_type VARCHAR(255),
+  FOREIGN KEY (user_id) REFERENCES usuario(id)
+);
+
+
+- Fazer o sistema funcionar com usuario e senha
+express mysql2 bcryptjs jsonwebtoken body-parser
