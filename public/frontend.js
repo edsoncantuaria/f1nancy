@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const welcomeMessage = document.getElementById('welcome-message');
             const removeControle = document.getElementById('controle-receitas-despesas');
             const removeTabela = document.getElementById('removeTabela');
-            const removeAbout = document.getElementById('about');
+            const removeAbout = document.getElementById('removeAbout');
 
             if (data.loggedIn) {
                 userInfo.textContent = `Bem-vindo, ${data.username}`;
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginButton.style.display = 'none'; // Esconder botão de login
                 registerButton.style.display = 'none'; // Esconder botão de registro
                 welcomeMessage.style.display = 'none';
-                removeAbout.style.display = 'nome';
+                removeAbout.style.display = 'none';
             } else {
                 userInfo.textContent = '';
                 logoutButton.style.display = 'none';
