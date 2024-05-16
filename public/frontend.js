@@ -285,17 +285,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const logoutButton = document.getElementById('logout-button');
             const loginButton = document.getElementById('loginButton');
             const registerButton = document.getElementById('registerButton');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const removeControle = document.getElementById('controle-receitas-despesas');
+            const removeTabela = document.getElementById('removeTabela');
+            const removeAbout = document.getElementById('about');
 
             if (data.loggedIn) {
                 userInfo.textContent = `Bem-vindo, ${data.username}`;
                 logoutButton.style.display = 'inline';
                 loginButton.style.display = 'none'; // Esconder botão de login
                 registerButton.style.display = 'none'; // Esconder botão de registro
+                welcomeMessage.style.display = 'none';
+                removeAbout.style.display = 'nome';
             } else {
                 userInfo.textContent = '';
                 logoutButton.style.display = 'none';
                 loginButton.style.display = 'inline'; // Mostrar botão de login
                 registerButton.style.display = 'inline'; // Mostrar botão de registro
+                removeControle.style.display = 'none';
+                removeTabela.style.display = 'none';
             }
         })
         .catch(error => console.error('Erro ao verificar autenticação:', error));
@@ -622,6 +630,14 @@ if (window.location.pathname === '/') {
     loadTransactions();
 }
 
+// Função para ocultar a mensagem de boas-vindas quando o usuário está logado
+function hideWelcomeMessage() {
+    const welcomeMessage = document.getElementById('welcome-message');
+    if (welcomeMessage) {
+        welcomeMessage.style.display = 'none';
+    }
+}
+
 
 // Carregar dados do dashboard
 async function loadDashboardData() {
@@ -656,7 +672,6 @@ async function loadDashboardData() {
     }
 }
 
-
 // Chamar loadDashboardData ao carregar a página inicial
 if (window.location.pathname === '/') {
     loadDashboardData();
@@ -685,9 +700,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function updateDashboard(data) {
-    document.getElementById('current-balance').textContent = `Saldo Atual: R$ ${data.currentBalance.toFixed(2)}`;
-    document.getElementById('total-revenue').textContent = `Receitas Totais: R$ ${data.totalRevenue.toFixed(2)}`;
-    document.getElementById('total-expenses').textContent = `Despesas Totais: R$ ${data.totalExpenses.toFixed(2)}`;
+    document.getElementById('current-balance').textContent = `R$ ${data.currentBalance.toFixed(2)}`;
+    document.getElementById('total-revenue').textContent = `R$ ${data.totalRevenue.toFixed(2)}`;
+    document.getElementById('total-expenses').textContent = `R$ ${data.totalExpenses.toFixed(2)}`;
 
     createBarChart('expenses-chart', data.expensesByCategory, 'Despesas por Categoria', 'rgba(255, 99, 132, 0.5)', 'rgba(255, 99, 132, 1)');
     createBarChart('revenue-chart', data.revenueByCategory, 'Receitas por Categoria', 'rgba(54, 162, 235, 0.5)', 'rgba(54, 162, 235, 1)');

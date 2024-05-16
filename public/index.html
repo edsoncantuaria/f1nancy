@@ -17,8 +17,8 @@
                 <li><a class="smoothscroll" href="#header">Início</a></li>
                 <li><a class="smoothscroll" href="#about">Sobre</a></li>
                 <li><a class="smoothscroll" href="#controle-receitas-despesas">Controle Receita e Despesa</a></li>
-                <li><a class="smoothscroll" href="/login.html">Login</a></li>
-                <li><a class="smoothscroll" href="/register.html">Registrar</a></li>
+                <li><a class="smoothscroll" href="/login.html">-</a></li>
+                <li><a class="smoothscroll" href="/register.html">-</a></li>
               </ul>
             </nav>
           </div>
@@ -41,7 +41,7 @@
          <!-- AUTENTICAR -->
 
         <div class="container" id="app">
-          <h1>Bem-vindo ao Sistema F1nancy</h1>
+          <h1 id="welcome-message">Bem-vindo ao Sistema F1nancy</h1>
           <div id="user-info"></div>
           <button id="loginButton">Login</button>
           <button id="registerButton">Register</button>
@@ -185,7 +185,7 @@
                 </div>
                 
                 <!-- Tabela para exibir transações -->
-                <div class="container">
+                <div class="container" id="removeTabela">
                   <form id="filter-form">
                     <label for="start-date">Data Inicial:</label>
                     <input type="date" id="start-date" name="start_date">

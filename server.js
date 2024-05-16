@@ -140,7 +140,7 @@ app.get('/check-auth', (req, res) => {
 // Rota GET para buscar e retornar todas as transações do usuário
 app.get('/transactions', isAuthenticated, (req, res) => {
     const userId = req.session.userId;
-    const sql = 'SELECT * FROM transacao WHERE user_id = ?';
+    const sql = 'SELECT * FROM transacao WHERE user_id = ? ORDER BY date DESC'; 
     connection.query(sql, [userId], (error, results) => {
         if (error) {
             console.error('Erro ao buscar transações:', error);
@@ -300,13 +300,88 @@ app.post('/filtered-transactions', (req, res) => {
     });
 });
 
+// // Rota GET para buscar dados do dashboard
+// app.get('/dashboard-data', async (req, res) => {
+//     try {
+//         const totalRevenueQuery = 'SELECT SUM(value) AS totalRevenue FROM transacao WHERE transaction_type = "receita"';
+//         const totalExpensesQuery = 'SELECT SUM(value) AS totalExpenses FROM transacao WHERE transaction_type = "despesa"';
+//         const expensesByCategoryQuery = 'SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "despesa" GROUP BY category';
+//         const revenueByCategoryQuery = 'SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "receita" GROUP BY category';
+
+//         // Executar consultas e obter resultados
+//         const totalRevenueResult = await executeQuery(totalRevenueQuery);
+//         const totalExpensesResult = await executeQuery(totalExpensesQuery);
+//         const expensesByCategoryResult = await executeQuery(expensesByCategoryQuery);
+//         const revenueByCategoryResult = await executeQuery(revenueByCategoryQuery);
+
+//         // Extrair valores dos resultados
+//         const totalRevenue = totalRevenueResult[0]?.totalRevenue || 0;
+//         const totalExpenses = totalExpensesResult[0]?.totalExpenses || 0;
+
+//         // Mapear resultados para as categorias
+//         const expensesByCategory = expensesByCategoryResult.map(row => ({
+//             category: row.category,
+//             total: row.total
+//         }));
+
+//         const revenueByCategory = revenueByCategoryResult.map(row => ({
+//             category: row.category,
+//             total: row.total
+//         }));
+
+//         // Calcular saldo atual
+//         const currentBalance = totalRevenue - totalExpenses;
+
+//         // Enviar resposta JSON
+//         res.json({
+//             currentBalance,
+//             totalRevenue,
+//             totalExpenses,
+//             expensesByCategory,
+//             revenueByCategory
+//         });
+//     } catch (error) {
+//         console.error('Erro ao buscar dados do dashboard:', error);
+//         res.status(500).json({ error: 'Erro ao buscar dados do dashboard' });
+//     }
+// });
+
+// // Rota GET para buscar dados de despesas mensais
+// app.get('/monthly-expenses', async (req, res) => {
+//     try {
+//         const monthlyExpensesQuery = `
+//             SELECT MONTH(date) as month, SUM(value) AS total
+//             FROM transacao
+//             WHERE transaction_type = 'despesa'
+//             GROUP BY MONTH(date)
+//             ORDER BY MONTH(date);
+//         `;
+
+//         // Executar consulta e obter resultados
+//         const monthlyExpensesResult = await executeQuery(monthlyExpensesQuery);
+
+//         // Mapear resultados para o formato desejado
+//         const monthlyExpenses = Array.from({ length: 12 }, (_, i) => {
+//             const monthData = monthlyExpensesResult.find(row => row.month === i + 1);
+//             return monthData ? monthData.total : 0;
+//         });
+
+//         // Enviar resposta JSON
+//         res.json({ monthlyExpenses });
+//     } catch (error) {
+//         console.error('Erro ao buscar dados de despesas mensais:', error);
+//         res.status(500).json({ error: 'Erro ao buscar dados de despesas mensais' });
+//     }
+// });
+
 // Rota GET para buscar dados do dashboard
-app.get('/dashboard-data', async (req, res) => {
+app.get('/dashboard-data', isAuthenticated, async (req, res) => {
     try {
-        const totalRevenueQuery = 'SELECT SUM(value) AS totalRevenue FROM transacao WHERE transaction_type = "receita"';
-        const totalExpensesQuery = 'SELECT SUM(value) AS totalExpenses FROM transacao WHERE transaction_type = "despesa"';
-        const expensesByCategoryQuery = 'SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "despesa" GROUP BY category';
-        const revenueByCategoryQuery = 'SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "receita" GROUP BY category';
+        const userId = req.session.userId;
+        const totalRevenueQuery = `SELECT SUM(value) AS totalRevenue FROM transacao WHERE transaction_type = "receita" AND user_id = ${userId}`;
+        const totalExpensesQuery = `SELECT SUM(value) AS totalExpenses FROM transacao WHERE transaction_type = "despesa" AND user_id = ${userId}`;
+        const expensesByCategoryQuery = `SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "despesa" AND user_id = ${userId} GROUP BY category`;
+        const revenueByCategoryQuery = `SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "receita" AND user_id = ${userId} GROUP BY category`;
 
         // Executar consultas e obter resultados
         const totalRevenueResult = await executeQuery(totalRevenueQuery);
@@ -347,12 +422,13 @@ app.get('/dashboard-data', async (req, res) => {
 });
 
 // Rota GET para buscar dados de despesas mensais
-app.get('/monthly-expenses', async (req, res) => {
+app.get('/monthly-expenses', isAuthenticated, async (req, res) => {
     try {
+        const userId = req.session.userId;
         const monthlyExpensesQuery = `
             SELECT MONTH(date) as month, SUM(value) AS total
             FROM transacao
-            WHERE transaction_type = 'despesa'
+            WHERE transaction_type = 'despesa' AND user_id = ${userId}
             GROUP BY MONTH(date)
             ORDER BY MONTH(date);
         `;
@@ -373,7 +449,6 @@ app.get('/monthly-expenses', async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar dados de despesas mensais' });
     }
 });
-
 
 
 // Iniciar o servidor
