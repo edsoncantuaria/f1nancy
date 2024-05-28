@@ -62,9 +62,11 @@ app.post('/send-email', async (req, res) => {
     try {
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: 'Email sent successfully' });
+        console.log(`Enviado email de formulário`);
     } catch (error) {
         console.error('Error sending email:', error);
         res.status(500).json({ error: 'Error sending email' });
+        console.log(`ERRO: Não foi enviado email de formulário`);
     }
 });
 
@@ -79,9 +81,11 @@ app.post('/send-email-register', async (req, res) => {
     try {
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: 'Email sent successfully' });
+        console.log(`Enviado email de registro`);
     } catch (error) {
         console.error('Error sending email:', error);
         res.status(500).json({ error: 'Error sending email' });
+        console.log(`ERRO: Não foi enviado email de registro`);
     }
 });
 
@@ -110,9 +114,11 @@ app.post('/register', async (req, res) => {
         const query = 'INSERT INTO usuario (username, email, password) VALUES (?, ?, ?)';
         await executeQuery(query, [username, email, hashedPassword]);
         res.json({ message: 'Usuário registrado com sucesso' });
+        console.log(`Usuário registrado`);
     } catch (error) {
         console.error('Erro ao registrar usuário:', error);
         res.status(500).json({ error: 'Erro ao registrar usuário' });
+        console.log(`Erro ao registrar usuário`);
     }
 });
 
@@ -140,9 +146,11 @@ app.post('/login', async (req, res) => {
         req.session.userId = user.id;
         req.session.username = user.username;
         res.json({ success: true, message: 'Login bem-sucedido!' });
+        console.log(`Login Feito com sucesso`);
     } catch (err) {
         console.error('Erro ao fazer login:', err);
         res.json({ success: false, message: 'Erro ao fazer login.' });
+        console.log(`Erro ao fazer Login`);
     }
 });
 
@@ -152,8 +160,10 @@ app.post('/logout', (req, res) => {
         if (err) {
             console.error('Erro ao fazer logout:', err);
             res.status(500).json({ error: 'Erro ao fazer logout' });
+            console.log(`Erro ao fazer Logout`);
         } else {
             res.json({ message: 'Logout bem-sucedido' });
+            console.log(`Logout Feito`);
         }
     });
 });
@@ -177,6 +187,7 @@ app.get('/transactions', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar transações:', error);
         res.status(500).json({ error: 'Erro ao buscar transações' });
+        console.log(`Erro ao fazer buscar transações`);
     }
 });
 
@@ -188,9 +199,11 @@ app.post('/transactions', isAuthenticated, async (req, res) => {
     try {
         const result = await executeQuery(sql, [date, value, description, category, transaction_type || null, userId]);
         res.status(200).json({ id: result.insertId, date, value, description, category, transaction_type });
+        console.log(`Adicionado transação`);
     } catch (err) {
         console.error('Erro ao adicionar transação:', err);
         res.status(500).json({ error: 'Erro ao adicionar transação' });
+        console.log(`Erro ao fazer adicionar transação`);
     }
 });
 
@@ -205,10 +218,12 @@ app.get('/transactions/:id', isAuthenticated, async (req, res) => {
             res.status(200).json(result[0]);
         } else {
             res.status(404).json({ error: 'Transação não encontrada' });
+            console.log(`Erro ao fazer procurar transação`);
         }
     } catch (err) {
         console.error('Erro ao buscar transação para edição:', err);
         res.status(500).json({ error: 'Erro ao buscar transação para edição' });
+        console.log(`Erro ao fazer procurar transação`);
     }
 });
 
@@ -221,9 +236,11 @@ app.put('/transactions/:id', isAuthenticated, async (req, res) => {
     try {
         await executeQuery(sql, [date, value, description, category, transactionType, id, userId]);
         res.status(200).json({ id, date, value, description, category, transactionType });
+        console.log(`Transação editada`);
     } catch (err) {
         console.error('Erro ao editar transação:', err);
         res.status(500).json({ error: 'Erro ao editar transação' });
+        console.log(`Erro ao editar uma transação`);
     }
 });
 
@@ -235,9 +252,11 @@ app.delete('/transactions/:id', isAuthenticated, async (req, res) => {
     try {
         await executeQuery(sql, [id, userId]);
         res.status(200).json({ id });
+        console.log(`Transação deletada`);
     } catch (err) {
         console.error('Erro ao excluir transação:', err);
         res.status(500).json({ error: 'Erro ao excluir transação' });
+        console.log(`Erro ao deletar transação`);
     }
 });
 
@@ -272,9 +291,11 @@ app.post('/filtered-transactions', isAuthenticated, async (req, res) => {
     try {
         const results = await executeQuery(sql, params);
         res.status(200).json(results);
+        console.log(`Filtrado transação`);
     } catch (error) {
         console.error('Erro ao filtrar transações:', error);
         res.status(500).json({ error: 'Erro ao filtrar transações' });
+        console.log(`Erro ao filtrar transação`);
     }
 });
 
@@ -317,6 +338,7 @@ app.get('/dashboard-data', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar dados do dashboard:', error);
         res.status(500).json({ error: 'Erro ao buscar dados do dashboard' });
+        console.log(`Erro ao fazer carregar Dashboard`);
     }
 });
 
@@ -343,6 +365,7 @@ app.get('/monthly-expenses', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar dados de despesas mensais:', error);
         res.status(500).json({ error: 'Erro ao buscar dados de despesas mensais' });
+        console.log(`Erro ao fazer carregar Despesas Mensais`);
     }
 });
 
@@ -356,6 +379,7 @@ app.get('/metas', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar metas:', error);
         res.status(500).json({ error: 'Erro ao buscar metas' });
+        console.log(`Erro ao ao buscar metas`);
     }
 });
 
@@ -370,6 +394,7 @@ app.post('/metas', isAuthenticated, async (req, res) => {
     } catch (err) {
         console.error('Erro ao adicionar meta:', err);
         res.status(500).json({ error: 'Erro ao adicionar meta' });
+        console.log(`Erro ao adicionar meta`);
     }
 });
 
@@ -384,6 +409,7 @@ app.delete('/metas/:id', isAuthenticated, async (req, res) => {
     } catch (err) {
         console.error('Erro ao excluir meta:', err);
         res.status(500).json({ error: 'Erro ao excluir meta' });
+        console.log(`Erro ao excluir meta`);
     }
 });
 
@@ -434,6 +460,7 @@ app.post('/finalize-meta', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error('Erro ao finalizar meta:', error);
         res.status(500).json({ error: 'Erro ao finalizar meta' });
+        console.log(`Erro ao finalizar meta`);
     }
 });
 
