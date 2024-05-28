@@ -1,3 +1,4 @@
+
 // Lidar com o registro de usuário
 
 document.getElementById('registerForm')?.addEventListener('submit', async (event) => {
@@ -20,6 +21,28 @@ document.getElementById('registerForm')?.addEventListener('submit', async (event
     } else {
         alert(result.error);
     }
+
+    try {
+        const response = await fetch('/send-email-register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({username, email})
+        });
+  
+        if (response.ok) {
+          alert('Obrigado por se cadastrar!');
+        } else {
+          const errorData = await response.json();
+          console.error('Erro ao enviar email de cadastro', errorData);
+          alert('Erro ao enviar email de cadastro. Por favor, tente novamente.');
+        }
+      } catch (error) {
+        console.error('Erro ao enviar email:', error);
+        alert('Erro ao enviar email. Por favor, tente novamente.');
+      }
+    
 });
 
 // Lidar com o login de usuário
@@ -85,6 +108,38 @@ document.getElementById('registerButton')?.addEventListener('click', async () =>
     });
 
 
+    document.getElementById('contactForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+    
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+    
+        console.log('Form data:', { name, email, message }); // Log para depuração
+    
+        try {
+          const response = await fetch('/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, message })
+          });
+    
+          if (response.ok) {
+            alert('Email enviado com sucesso!');
+          } else {
+            const errorData = await response.json();
+            console.error('Erro ao enviar email:', errorData);
+            alert('Erro ao enviar email. Por favor, tente novamente.');
+          }
+        } catch (error) {
+          console.error('Erro ao enviar email:', error);
+          alert('Erro ao enviar email. Por favor, tente novamente.');
+        }
+      });
+
+      
 // Função para excluir uma transação pelo ID
 async function deleteTransaction(id) {
     if (confirm('Tem certeza que deseja excluir esta transação?')) {
@@ -106,29 +161,6 @@ async function deleteTransaction(id) {
     }
 }
 
-// // Função para abrir o modal de edição com o ID da transação
-// function openEditModal(id) {
-//     const modal = document.getElementById('editModal');
-//     modal.style.display = 'block';
-
-//     // Adicione o ID da transação ao formulário de edição
-//     document.getElementById('edit-transaction-form').setAttribute('data-transaction-id', id);
-// }
-
-// // Evento de clique no botão "Editar" para abrir o modal
-// document.addEventListener('click', function(e) {
-//     if (e.target && e.target.textContent === 'Editar') {
-//         const id = e.target.dataset.transactionId; // Obter o ID da transação
-//         openEditModal(id);
-//     }
-// });
-
-// // Fechar o modal ao clicar no botão de fechar (X)
-// const closeBtn = document.querySelector('.close');
-// closeBtn.addEventListener('click', function() {
-//     const modal = document.getElementById('editModal');
-//     modal.style.display = 'none';
-// });
 
 
 // Função para abrir o modal de edição e buscar os detalhes da transação
@@ -142,9 +174,6 @@ function openEditModal(transactionId) {
             document.getElementById('edit-value').value = data.value;
             document.getElementById('edit-description').value = data.description;
             document.getElementById('edit-category').value = data.category;
-            document.getElementById('edit-subcategory').value = data.subcategory;
-            document.getElementById('edit-account').value = data.account;
-            document.getElementById('edit-paymentMethod').value = data.payment_method;
             document.getElementById('edit-transactionType').value = data.transaction_type;
 
             // Definir o ID da transação no formulário de edição
@@ -191,9 +220,6 @@ function fillEditModal(transaction) {
     document.getElementById('edit-value').value = transaction.value;
     document.getElementById('edit-description').value = transaction.description;
     document.getElementById('edit-category').value = transaction.category;
-    document.getElementById('edit-subcategory').value = transaction.subcategory;
-    document.getElementById('edit-account').value = transaction.account;
-    document.getElementById('edit-paymentMethod').value = transaction.payment_method;
     document.getElementById('edit-transactionType').value = transaction.transaction_type;
 
     // Exibir o modal de edição
@@ -218,6 +244,38 @@ function closeModal() {
     editModal.style.display = 'none';
 }
 
+
+document.getElementById('contactForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    console.log('Form data:', { name, email, message }); // Log para depuração
+
+    try {
+    const response = await fetch('/send-email', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, message })
+    });
+
+    if (response.ok) {
+        alert('Email enviado com sucesso!');
+    } else {
+        const errorData = await response.json();
+        console.error('Erro ao enviar email:', errorData);
+        alert('Erro ao enviar email. Por favor, tente novamente.');
+    }
+    } catch (error) {
+    console.error('Erro ao enviar email:', error);
+    alert('Erro ao enviar email. Por favor, tente novamente.');
+    }
+});
+
 // Função para enviar o formulário de edição
 function submitEditForm() {
     const id = document.getElementById('edit-transaction-form').getAttribute('data-transaction-id'); // Obter o ID da transação do atributo data-transaction-id
@@ -227,9 +285,6 @@ function submitEditForm() {
         value: document.getElementById('edit-value').value,
         description: document.getElementById('edit-description').value,
         category: document.getElementById('edit-category').value,
-        subcategory: document.getElementById('edit-subcategory').value,
-        account: document.getElementById('edit-account').value,
-        paymentMethod: document.getElementById('edit-paymentMethod').value,
         transactionType: document.getElementById('edit-transactionType').value
     };
 
@@ -275,6 +330,9 @@ window.onclick = function(event) {
     }
 }
 
+
+
+
 // Lidar com adição, edição e exclusão de transações como antes
 document.addEventListener('DOMContentLoaded', () => {
         // Verificar se o usuário está autenticado
@@ -289,6 +347,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const removeControle = document.getElementById('controle-receitas-despesas');
             const removeTabela = document.getElementById('removeTabela');
             const removeAbout = document.getElementById('removeAbout');
+            const removeContact = document.getElementById('contact');
+            const removeTestimonial = document.getElementById('testimonial');
+            const removeSistema = document.getElementById('sistema');
+
+
 
             if (data.loggedIn) {
                 userInfo.textContent = `Bem-vindo, ${data.username}`;
@@ -297,6 +360,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 registerButton.style.display = 'none'; // Esconder botão de registro
                 welcomeMessage.style.display = 'none';
                 removeAbout.style.display = 'none';
+                removeContact.style.display = 'none';
+                removeTestimonial.style.display = 'none';
+
             } else {
                 userInfo.textContent = '';
                 logoutButton.style.display = 'none';
@@ -304,6 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 registerButton.style.display = 'inline'; // Mostrar botão de registro
                 removeControle.style.display = 'none';
                 removeTabela.style.display = 'none';
+                removeSistema.style.display = 'none';
+
             }
         })
         .catch(error => console.error('Erro ao verificar autenticação:', error));
@@ -320,9 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
             value: form.value.value,
             description: form.description.value,
             category: form.category.value,
-            subcategory: form.subcategory.value,
-            account: form.account.value,
-            payment_method: form.paymentMethod.value,
             transaction_type: form.transactionType.value,
         };
 
@@ -407,17 +472,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
 
-                    <td>${formattedDate}</td> <!-- Utilizar a data formatada aqui -->
-                    <td>${transaction.value.toFixed(2)}</td> <!-- Arredondar o valor para duas casas decimais -->
+                    <td>${formattedDate}</td>
+                    <td>${transaction.value.toFixed(2)}</td>
                     <td>${transaction.description}</td>
                     <td>${transaction.category}</td>
-                    <td>${transaction.subcategory}</td>
-                    <td>${transaction.account}</td>
-                    <td>${transaction.payment_method}</td>
                     <td>${transaction.transaction_type}</td>
                     <td>
                         <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
-                        <button class="btn-td" onclick="deleteRow(${transaction.id})">Excluir</button>
+                        <button class="btn-td" onclick="deleteTransaction(${transaction.id})">Excluir</button>
                     </td>
                 `;
                 transactionsTableBody.appendChild(row);
@@ -471,9 +533,6 @@ async function submitEditForm() {
         value: document.getElementById('edit-value').value,
         description: document.getElementById('edit-description').value,
         category: document.getElementById('edit-category').value,
-        subcategory: document.getElementById('edit-subcategory').value,
-        account: document.getElementById('edit-account').value,
-        paymentMethod: document.getElementById('edit-paymentMethod').value,
         transactionType: document.getElementById('edit-transactionType').value
     };
 
@@ -549,15 +608,11 @@ function updateTransactionTable(transactions) {
         const row = document.createElement('tr');
         // Preencher a linha da tabela com os dados da transação
         row.innerHTML = `
-            <td>${formattedDate}</td> <!-- Utilizar a data formatada aqui -->
+            <td>${formattedDate}</td>
             <td>${transaction.value.toFixed(2)}</td>
             <td>${transaction.description}</td>
             <td>${transaction.category}</td>
-            <td>${transaction.subcategory}</td>
-            <td>${transaction.account}</td>
-            <td>${transaction.payment_method}</td>
             <td>${transaction.transaction_type}</td>
-            <td>
             <button class="btn-td" onclick="openEditModal(${transaction.id})" data-transaction-id="${transaction.id}">Editar</button>
             <button class="btn-td" onclick="deleteTransaction(${transaction.id})">Excluir</button>
             </td>
@@ -572,9 +627,6 @@ function applyFilters() {
         start_date: document.getElementById('start-date').value,
         end_date: document.getElementById('end-date').value,
         category: document.getElementById('filter-category').value,
-        subcategory: document.getElementById('filter-subcategory').value,
-        account: document.getElementById('filter-account').value,
-        payment_method: document.getElementById('filter-paymentMethod').value,
         transaction_type: document.getElementById('filter-transactionType').value
     };
 
@@ -614,9 +666,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('start-date').value = '';
         document.getElementById('end-date').value = '';
         document.getElementById('filter-category').value = '';
-        document.getElementById('filter-subcategory').value = '';
-        document.getElementById('filter-account').value = '';
-        document.getElementById('filter-paymentMethod').value = '';
         document.getElementById('filter-transactionType').value = '';
 
         // Atualizar a tabela após limpar os filtros
@@ -705,7 +754,7 @@ function updateDashboard(data) {
     document.getElementById('total-expenses').textContent = `R$ ${data.totalExpenses.toFixed(2)}`;
 
     createBarChart('expenses-chart', data.expensesByCategory, 'Despesas por Categoria', 'rgba(255, 99, 132, 0.5)', 'rgba(255, 99, 132, 1)');
-    createBarChart('revenue-chart', data.revenueByCategory, 'Receitas por Categoria', 'rgba(54, 162, 235, 0.5)', 'rgba(54, 162, 235, 1)');
+    createBarChart('revenue-chart', data.revenueByCategory, 'Receitas por Categoria', 'rgba(99, 255, 125, 0.5)', 'rgba(99, 255, 125, 1)');
 }
 
 function createBarChart(chartId, data, label, backgroundColor, borderColor) {
@@ -785,3 +834,248 @@ function createMonthlyExpensesChart(monthlyExpenses) {
         plugins: [ChartDataLabels]
     });
 }
+
+// Obter os elementos dos modais e botões
+const transactionModal = document.getElementById("transactionModal");
+const filterModal = document.getElementById("filterModal");
+
+const openTransactionModalBtn = document.getElementById("openTransactionModalBtn");
+const openFilterModalBtn = document.getElementById("openFilterModalBtn");
+
+const addTransactionBtn = document.getElementById("add-transaction-btn");
+const filterBtn = document.getElementById("filter-btn");
+
+const closeTransactionModal = document.getElementById("closeTransactionModal");
+const closeFilterModal = document.getElementById("closeFilterModal");
+
+openTransactionModalBtn.onclick = function() {
+  transactionModal.style.display = "block";
+}
+openFilterModalBtn.onclick = function() {
+  filterModal.style.display = "block";
+}
+addTransactionBtn.onclick = function() {
+  transactionModal.style.display = "block";
+}
+filterBtn.onclick = function() {
+  filterModal.style.display = "block";
+}
+
+closeTransactionModal.onclick = function() {
+  transactionModal.style.display = "none";
+}
+closeFilterModal.onclick = function() {
+  filterModal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == transactionModal) {
+    transactionModal.style.display = "none";
+  }
+  if (event.target == filterModal) {
+    filterModal.style.display = "none";
+  }
+}
+
+//Metas 
+/*
+document.addEventListener('DOMContentLoaded', () => {
+    const metasList = document.getElementById('metas-list');
+    const metaForm = document.getElementById('meta-form');
+    const metaName = document.getElementById('meta-name');
+    const metaDueDate = document.getElementById('meta-due-date');
+    const metaValue = document.getElementById('meta-value');
+
+    // Impede a seleção de datas retroativas
+    metaDueDate.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+    const loadMetas = async () => {
+        const response = await fetch('/metas');
+        const metas = await response.json();
+        const balanceResponse = await fetch('/dashboard-data');
+        const { currentBalance } = await balanceResponse.json();
+        metasList.innerHTML = '';
+        metas.forEach(meta => {
+            const progress = Math.min((currentBalance / meta.value) * 100, 100).toFixed(2);
+            const formattedDate = formatDate(meta.due_date);
+            const metaItem = document.createElement('div');
+            metaItem.innerHTML = `
+                <h3>${meta.name}</h3>
+                <p>Data Limite: ${formattedDate}</p>
+                <p>Valor: R$ ${meta.value.toFixed(2)}</p>
+                <p>Progresso: <span id="progress-${meta.id}">${progress}%</span></p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${progress}%;"></div>
+                </div>
+                <button onclick="deleteMeta(${meta.id})">Remover</button>
+                <button onclick="finalizeMeta(${meta.id}, ${progress})">Finalizar</button>
+            `;
+            metasList.appendChild(metaItem);
+        });
+    };
+
+    metaForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const dueDate = metaDueDate.value;
+        const today = new Date().toISOString().split('T')[0];
+        if (dueDate < today) {
+            alert('A data da meta não pode ser retroativa.');
+            return;
+        }
+        const response = await fetch('/metas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: metaName.value,
+                due_date: metaDueDate.value,
+                value: parseFloat(metaValue.value) // Assegurar que o valor é float
+            }),
+        });
+        if (response.ok) {
+            loadMetas();
+            metaForm.reset();
+        }
+    });
+
+    window.deleteMeta = async (id) => {
+        const response = await fetch(`/metas/${id}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            loadMetas();
+        }
+    };
+
+    window.finalizeMeta = async (id, progress) => {
+        if (progress < 100) {
+            alert('A meta ainda não atingiu 100%');
+            return;
+        }
+        const response = await fetch('/finalize-meta', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ metaId: id }),
+        });
+        if (response.ok) {
+            loadMetas();
+        }
+    };
+
+    loadMetas();
+});
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+*/
+
+//
+
+document.addEventListener('DOMContentLoaded', () => {
+    const metasList = document.getElementById('metas-list');
+    const metaForm = document.getElementById('meta-form');
+    const metaName = document.getElementById('meta-name');
+    const metaDueDate = document.getElementById('meta-due-date');
+    const metaValue = document.getElementById('meta-value');
+
+    // Impede a seleção de datas retroativas
+    metaDueDate.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+    const loadMetas = async () => {
+        const response = await fetch('/metas');
+        const metas = await response.json();
+        const balanceResponse = await fetch('/dashboard-data');
+        const { currentBalance } = await balanceResponse.json();
+        metasList.innerHTML = '';
+        metas.forEach(meta => {
+            const progress = Math.min((currentBalance / meta.value) * 100, 100).toFixed(2);
+            const formattedDate = formatDate(meta.due_date);
+            const metaItem = document.createElement('div');
+            metaItem.innerHTML = `
+                <h3>${meta.name}</h3>
+                <p>Data Limite: ${formattedDate}</p>
+                <p>Valor: R$ ${meta.value.toFixed(2)}</p>
+                <p>Progresso: <span id="progress-${meta.id}">${progress}%</span></p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${progress}%;"></div>
+                </div>
+                <button onclick="deleteMeta(${meta.id})">Remover</button>
+                <button onclick="finalizeMeta(${meta.id}, ${progress})">Finalizar</button>
+            `;
+            metasList.appendChild(metaItem);
+        });
+    };
+
+    metaForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const dueDate = metaDueDate.value;
+        const today = new Date().toISOString().split('T')[0];
+        if (dueDate < today) {
+            alert('A data da meta não pode ser retroativa.');
+            return;
+        }
+        const response = await fetch('/metas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: metaName.value,
+                due_date: metaDueDate.value,
+                value: parseFloat(metaValue.value) // Assegurar que o valor é float
+            }),
+        });
+        if (response.ok) {
+            loadMetas();
+            metaForm.reset();
+        }
+    });
+
+    window.deleteMeta = async (id) => {
+        const response = await fetch(`/metas/${id}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            loadMetas();
+        }
+    };
+
+    window.finalizeMeta = async (id, progress) => {
+        if (progress < 100) {
+            alert('A meta ainda não atingiu 100%');
+            return;
+        }
+        const response = await fetch('/finalize-meta', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ metaId: id }),
+        });
+        if (response.ok) {
+            loadMetas();
+        } else {
+            const error = await response.json();
+            alert(`Erro ao finalizar meta: ${error.error}`);
+        }
+    };
+
+    loadMetas();
+});
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+

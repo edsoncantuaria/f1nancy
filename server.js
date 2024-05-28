@@ -3,7 +3,10 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const session = require('express-session');
+const nodemailerSendgrid = require('nodemailer-sendgrid');
+
 
 const app = express();
 const port = 3000;
@@ -29,6 +32,57 @@ connection.connect((err) => {
     if (err) throw err;
     console.log('Conectado ao banco de dados MySQL');
 });
+
+
+// Configuração do transporte de email usando SendGrid
+const transporter = nodemailer.createTransport({
+    host: 'smtp.sendgrid.net',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'apikey',
+        pass: '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',
+    },
+});
+  
+  app.post('/send-email', async (req, res) => {
+    const { name, email, message } = req.body;
+  
+    const mailOptions = {
+      from: 'sistema.financy@gmail.com',
+      to: 'sistema.financy@gmail.com',
+      subject: `Novo contato do formulário: ${name} email ${email}` ,
+      text: message
+    };
+ 
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Email sent successfully' });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ error: 'Error sending email' });
+    }
+  });
+
+
+  app.post('/send-email-register', async (req, res) => {
+    const { username, email} = req.body;
+  
+    const mailOptions = {
+      from: 'sistema.financy@gmail.com',
+      to: `${email}`,
+      subject: `Email supresa!` ,
+      text: `f1nancy agradece pelo seu cadastro, ${username} seja bem vindo a uma vida financeira organizada`
+    };
+ 
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Email sent successfully' });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ error: 'Error sending email' });
+    }
+  });
 
 // Função para executar consultas SQL
 function executeQuery(query) {
@@ -155,37 +209,18 @@ app.get('/transactions', isAuthenticated, (req, res) => {
 // Rota POST para adicionar uma nova transação
 app.post('/transactions', isAuthenticated, (req, res) => {
     const userId = req.session.userId;
-    const { date, value, description, category, subcategory, account, payment_method, transaction_type } = req.body;
-    const sql = `INSERT INTO transacao (date, value, description, category, subcategory, account, payment_method, transaction_type, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(sql, [date, value, description, category, subcategory, account, payment_method || null, transaction_type || null, userId], (err, result) => {
+    const { date, value, description, category, transaction_type } = req.body;
+    const sql = `INSERT INTO transacao (date, value, description, category, transaction_type, user_id) VALUES (?, ?, ?, ?, ?, ?)`;
+    connection.query(sql, [date, value, description, category, transaction_type || null, userId], (err, result) => {
         if (err) {
             console.error('Erro ao adicionar transação:', err);
             res.status(500).json({ error: 'Erro ao adicionar transação' });
         } else {
             console.log('Transação adicionada:', result);
-            res.status(200).json({ id: result.insertId, date, value, description, category, subcategory, account, payment_method, transaction_type });
+            res.status(200).json({ id: result.insertId, date, value, description, category, transaction_type });
         }
     });
 });
-
-// // Rota GET para buscar uma transação específica para edição
-// app.get('/transactions/:id', isAuthenticated, (req, res) => {
-//     const userId = req.session.userId;
-//     const id = req.params.id;
-//     const sql = `SELECT * FROM transacao WHERE id=? AND user_id=?`;
-//     connection.query(sql, [id, userId], (err, result) => {
-//         if (err) {
-//             console.error('Erro ao buscar transação para edição:', err);
-//             res.status(500).json({ error: 'Erro ao buscar transação para edição' });
-//         } else {
-//             if (result.length > 0) {
-//                 res.status(200).json(result[0]);
-//             } else {
-//                 res.status(404).json({ error: 'Transação não encontrada' });
-//             }
-//         }
-//     });
-// });
 
 
 // Rota GET para buscar uma transação específica para edição
@@ -214,15 +249,15 @@ app.get('/transactions/:id', isAuthenticated, (req, res) => {
 app.put('/transactions/:id', isAuthenticated, (req, res) => {
     const userId = req.session.userId;
     const id = req.params.id;
-    const { date, value, description, category, subcategory, account, paymentMethod, transactionType } = req.body;
-    const sql = `UPDATE transacao SET date=?, value=?, description=?, category=?, subcategory=?, account=?, payment_method=?, transaction_type=? WHERE id=? AND user_id=?`;
-    connection.query(sql, [date, value, description, category, subcategory, account, paymentMethod, transactionType, id, userId], (err, result) => {
+    const { date, value, description, category, transactionType } = req.body;
+    const sql = `UPDATE transacao SET date=?, value=?, description=?, category=?, transaction_type=? WHERE id=? AND user_id=?`;
+    connection.query(sql, [date, value, description, category, transactionType, id, userId], (err, result) => {
         if (err) {
             console.error('Erro ao editar transação:', err);
             res.status(500).json({ error: 'Erro ao editar transação' });
         } else {
             console.log('Transação editada:', result);
-            res.status(200).json({ id, date, value, description, category, subcategory, account, paymentMethod, transactionType });
+            res.status(200).json({ id, date, value, description, category, transactionType });
         }
     });
 });
@@ -270,21 +305,6 @@ app.post('/filtered-transactions', (req, res) => {
         params.push(category);
     }
 
-    if (subcategory) {
-        sql += ' AND subcategory = ?';
-        params.push(subcategory);
-    }
-
-    if (account) {
-        sql += ' AND account = ?';
-        params.push(account);
-    }
-
-    if (payment_method) {
-        sql += ' AND payment_method = ?';
-        params.push(payment_method);
-    }
-
     if (transaction_type) {
         sql += ' AND transaction_type = ?';
         params.push(transaction_type);
@@ -300,79 +320,6 @@ app.post('/filtered-transactions', (req, res) => {
     });
 });
 
-// // Rota GET para buscar dados do dashboard
-// app.get('/dashboard-data', async (req, res) => {
-//     try {
-//         const totalRevenueQuery = 'SELECT SUM(value) AS totalRevenue FROM transacao WHERE transaction_type = "receita"';
-//         const totalExpensesQuery = 'SELECT SUM(value) AS totalExpenses FROM transacao WHERE transaction_type = "despesa"';
-//         const expensesByCategoryQuery = 'SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "despesa" GROUP BY category';
-//         const revenueByCategoryQuery = 'SELECT category, SUM(value) AS total FROM transacao WHERE transaction_type = "receita" GROUP BY category';
-
-//         // Executar consultas e obter resultados
-//         const totalRevenueResult = await executeQuery(totalRevenueQuery);
-//         const totalExpensesResult = await executeQuery(totalExpensesQuery);
-//         const expensesByCategoryResult = await executeQuery(expensesByCategoryQuery);
-//         const revenueByCategoryResult = await executeQuery(revenueByCategoryQuery);
-
-//         // Extrair valores dos resultados
-//         const totalRevenue = totalRevenueResult[0]?.totalRevenue || 0;
-//         const totalExpenses = totalExpensesResult[0]?.totalExpenses || 0;
-
-//         // Mapear resultados para as categorias
-//         const expensesByCategory = expensesByCategoryResult.map(row => ({
-//             category: row.category,
-//             total: row.total
-//         }));
-
-//         const revenueByCategory = revenueByCategoryResult.map(row => ({
-//             category: row.category,
-//             total: row.total
-//         }));
-
-//         // Calcular saldo atual
-//         const currentBalance = totalRevenue - totalExpenses;
-
-//         // Enviar resposta JSON
-//         res.json({
-//             currentBalance,
-//             totalRevenue,
-//             totalExpenses,
-//             expensesByCategory,
-//             revenueByCategory
-//         });
-//     } catch (error) {
-//         console.error('Erro ao buscar dados do dashboard:', error);
-//         res.status(500).json({ error: 'Erro ao buscar dados do dashboard' });
-//     }
-// });
-
-// // Rota GET para buscar dados de despesas mensais
-// app.get('/monthly-expenses', async (req, res) => {
-//     try {
-//         const monthlyExpensesQuery = `
-//             SELECT MONTH(date) as month, SUM(value) AS total
-//             FROM transacao
-//             WHERE transaction_type = 'despesa'
-//             GROUP BY MONTH(date)
-//             ORDER BY MONTH(date);
-//         `;
-
-//         // Executar consulta e obter resultados
-//         const monthlyExpensesResult = await executeQuery(monthlyExpensesQuery);
-
-//         // Mapear resultados para o formato desejado
-//         const monthlyExpenses = Array.from({ length: 12 }, (_, i) => {
-//             const monthData = monthlyExpensesResult.find(row => row.month === i + 1);
-//             return monthData ? monthData.total : 0;
-//         });
-
-//         // Enviar resposta JSON
-//         res.json({ monthlyExpenses });
-//     } catch (error) {
-//         console.error('Erro ao buscar dados de despesas mensais:', error);
-//         res.status(500).json({ error: 'Erro ao buscar dados de despesas mensais' });
-//     }
-// });
 
 // Rota GET para buscar dados do dashboard
 app.get('/dashboard-data', isAuthenticated, async (req, res) => {
@@ -451,6 +398,127 @@ app.get('/monthly-expenses', isAuthenticated, async (req, res) => {
 });
 
 
+// Rota GET para obter todas as metas do usuário
+app.get('/metas', isAuthenticated, (req, res) => {
+    const userId = req.session.userId;
+    const sql = 'SELECT * FROM meta WHERE user_id = ?';
+    connection.query(sql, [userId], (error, results) => {
+        if (error) {
+            console.error('Erro ao buscar metas:', error);
+            res.status(500).json({ error: 'Erro ao buscar metas' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+// Rota POST para adicionar uma nova meta
+app.post('/metas', isAuthenticated, (req, res) => {
+    const userId = req.session.userId;
+    const { name, due_date, value } = req.body;
+    const sql = `INSERT INTO meta (name, due_date, value, user_id) VALUES (?, ?, ?, ?)`;
+    connection.query(sql, [name, due_date, value, userId], (err, result) => {
+        if (err) {
+            console.error('Erro ao adicionar meta:', err);
+            res.status(500).json({ error: 'Erro ao adicionar meta' });
+        } else {
+            console.log('Meta adicionada:', result);
+            res.status(200).json({ id: result.insertId, name, due_date, value });
+        }
+    });
+});
+
+// Rota DELETE para remover uma meta existente
+app.delete('/metas/:id', isAuthenticated, (req, res) => {
+    const userId = req.session.userId;
+    const id = req.params.id;
+    const sql = `DELETE FROM meta WHERE id=? AND user_id=?`;
+    connection.query(sql, [id, userId], (err, result) => {
+        if (err) {
+            console.error('Erro ao excluir meta:', err);
+            res.status(500).json({ error: 'Erro ao excluir meta' });
+        } else {
+            console.log('Meta excluída:', result);
+            res.status(200).json({ id });
+        }
+    });
+});
+
+// Rota POST para finalizar uma meta
+app.post('/finalize-meta', (req, res) => {
+    const { metaId } = req.body;
+    const userId = req.session.userId;
+
+    console.log(`Iniciando finalização da meta: metaId=${metaId}, userId=${userId}`);
+
+    const totalRevenueQuery = `SELECT SUM(value) AS totalRevenue FROM transacao WHERE transaction_type = "receita" AND user_id = ?`;
+    const totalExpensesQuery = `SELECT SUM(value) AS totalExpenses FROM transacao WHERE transaction_type = "despesa" AND user_id = ?`;
+
+    connection.query(totalRevenueQuery, [userId], (err, revenueResults) => {
+        if (err) {
+            console.error('Erro ao buscar receitas:', err);
+            return res.status(500).json({ error: 'Erro ao buscar receitas' });
+        }
+
+        connection.query(totalExpensesQuery, [userId], (err, expensesResults) => {
+            if (err) {
+                console.error('Erro ao buscar despesas:', err);
+                return res.status(500).json({ error: 'Erro ao buscar despesas' });
+            }
+
+            const totalRevenue = revenueResults[0].totalRevenue || 0;
+            const totalExpenses = expensesResults[0].totalExpenses || 0;
+            const currentBalance = totalRevenue - totalExpenses;
+
+            const queryMeta = `SELECT * FROM meta WHERE id = ? AND user_id = ?`;
+            connection.query(queryMeta, [metaId, userId], (err, results) => {
+                if (err) {
+                    console.error('Erro ao buscar meta:', err);
+                    return res.status(500).json({ error: 'Erro ao buscar meta' });
+                }
+
+                const meta = results[0];
+                const progress = (currentBalance / meta.value) * 100;
+
+                if (progress < 100) {
+                    console.log('A meta ainda não atingiu 100%');
+                    return res.status(400).json({ error: 'A meta ainda não atingiu 100%' });
+                }
+
+                const today = new Date().toISOString().split('T')[0];
+                const transaction = {
+                    date: today,
+                    value: meta.value,
+                    description: meta.name,
+                    category: 'Meta',
+                    transaction_type: 'despesa'
+                };
+
+                const queryInsertTransaction = `
+                    INSERT INTO transacao (user_id, date, value, description, category, transaction_type)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `;
+                connection.query(queryInsertTransaction, [userId, transaction.date, transaction.value, transaction.description, transaction.category, transaction.transaction_type], (err) => {
+                    if (err) {
+                        console.error('Erro ao adicionar transação:', err);
+                        return res.status(500).json({ error: 'Erro ao adicionar transação' });
+                    }
+
+                    const queryDeleteMeta = `DELETE FROM meta WHERE id = ? AND user_id = ?`;
+                    connection.query(queryDeleteMeta, [metaId, userId], (err) => {
+                        if (err) {
+                            console.error('Erro ao deletar meta:', err);
+                            return res.status(500).json({ error: 'Erro ao deletar meta' });
+                        }
+
+                        console.log('Meta finalizada e transação criada com sucesso');
+                        res.status(200).json({ message: 'Meta finalizada e transação criada com sucesso' });
+                    });
+                });
+            });
+        });
+    });
+});
 // Iniciar o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);

@@ -16,9 +16,8 @@
               <ul>
                 <li><a class="smoothscroll" href="#header">Início</a></li>
                 <li><a class="smoothscroll" href="#about">Sobre</a></li>
-                <li><a class="smoothscroll" href="#controle-receitas-despesas">Controle Receita e Despesa</a></li>
-                <li><a class="smoothscroll" href="/login.html">-</a></li>
-                <li><a class="smoothscroll" href="/register.html">-</a></li>
+                <li><a class="smoothscroll" href="#testimonial">Quem usa</a></li>
+                <li><a class="smoothscroll" href="#contact">Contato</a></li>
               </ul>
             </nav>
           </div>
@@ -39,26 +38,26 @@
 
 
          <!-- AUTENTICAR -->
-
-        <div class="container" id="app">
-          <h1 id="welcome-message">Bem-vindo ao Sistema F1nancy</h1>
+         <section class="container t">
+         <h1 id="welcome-message">Bem-vindo ao Sistema F1nancy</h1>
+        <div class="auth" id="app">
           <div id="user-info"></div>
           <button id="loginButton">Login</button>
           <button id="registerButton">Register</button>
           <button id="logout-button" style="display:none;">Logout</button>
-
-
+        </div>
+      </section>
         <!-- About Section
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->  
   <div id="removeAbout">
 <section id="about">
     <div class="container">
-      <div class="row">
+      <div class="row1">
         <h1>Sobre</h1>
         <div class="block"></div>
         <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
       </div>
-      <div class="row">
+      <div class="row1">
         <div class="six columns">
           <h3><span class="typcn typcn-device-desktop icon"></span>Proposta</h3>
           <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
@@ -67,7 +66,7 @@
           <h3><span class="typcn typcn-pen icon"></span>Ideias</h3>
           <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
         </div>
-        <div class="row">
+        <div class="row1">
           <div class="six columns">
             <h3><span class="typcn typcn-cog-outline icon"></span>Metas</h3>
             <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
@@ -82,13 +81,121 @@
   </section>
 </div>
 
+
+<!-- Testimonials Section
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->  
+
+<section id="testimonial">
+  <div class="container">
+    <div class="quoteLoop">
+      <blockquote class="quote"> <img src="https://cdn.lucidpic.com/65a3c5a0bf1df.png" width="200" height="200" alt=""/>
+        <h5>&nbsp;<br>
+          &rdquo;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&rdquo;<br>
+          <small>Abrãao, Sed ut perspiciatis unde omnis</small></h5>
+      </blockquote>
+      <blockquote class="quote"> <img src="https://static01.nyt.com/newsgraphics/2020/11/12/fake-people/4b806cf591a8a76adfc88d19e90c8c634345bf3d/fallbacks/mobile-03.jpg" width="200" height="200" alt=""/>
+        <h5>&nbsp;<br>
+          &ldquo;Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.&rdquo;<br>
+          <small>Pedro, Sed ut perspiciatis unde omnis</small></h5>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+
+<!-- Contact Section
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->  
+
+<section id="contact">
+  <div class="container">
+    <h1>Contato</h1>
+    <div class="block"></div>
+    <form id="contactForm">
+      <div class="row1">
+        <div class="six columns">
+          <label for="exampleRecipientInput">Nome</label>
+          <input class="u-full-width" type="text" id="name" required>
+        </div>
+        <div class="six columns">
+          <label for="exampleEmailInput">Email</label>
+          <input class="u-full-width" type="email" id="email" required>
+        </div>
+      </div>
+      <div class="row1">
+        <label for="exampleMessage">Mensagem</label>
+        <textarea class="u-full-width" id="message" required></textarea>
+        <input class="button-primary" type="submit" value="Submit">
+      </div>
+    </form>
+  </div>
+</section>
+
+
+
+
           <!-- Receitas-Despesas Section
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->  
 
-    <main>
+    <main id="sistema">
+
+
+
+
+      <!-- new dashboard maybe-->
+      <section>
+      <div class="container dashboard">
+        <div class="row">
+            <div class="col-md-6">
+              <h2>Dashboard</h2>
+                <div class="grid-dash">
+                    <div class="cardReceita">
+                        <h5>Receitas</h5>
+                        <span id="total-revenue">R$ 0.00</span>
+                    </div>
+                    <div class="cardDespesa">
+                        <h5>Despesas</h5>
+                        <span id="total-expenses">R$ 0.00</span>
+                    </div>
+                    <div class="cardTotal">
+                        <h5>Saldo</h5>
+                        <span id="current-balance">R$ 0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2>Despesas por Categoria</h2>
+                <canvas id="expenses-chart" class="chart"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Despesas Mensais</h2>
+                <canvas id="monthly-expenses-chart" class="chart-monthly"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h2>Receitas por Categoria</h2>
+                <canvas id="revenue-chart" class="chart"></canvas>
+            </div>
+        </div>
+    </div>
+  </section>
+
+      <!-- Botões para abrir os modais -->
+      <div class="clean"></div>
+      <div class="modal-buttons container">
+        <button id="openTransactionModalBtn">Adicionar Transação</button>
+        <button id="openFilterModalBtn">Aplicar Filtro</button>
+      </div>
+      <div class="floating-button-container">
+        <button class="floating-button add-transaction-button" id="add-transaction-btn">+</button>
+        <button class="floating-button filter-button" id="filter-btn">&#x1F50D;</button>
+      </div>
+
         <section id="controle-receitas-despesas">
             <div class="container">
-                <h2>Controle de Receitas e Despesas</h2>
+              <div id="transactionModal" class="modal">
+                <div class="modal-content">
+                  <span class="close" id="closeTransactionModal">&times;</span>
                 <div class="transaction-form">
                     <h3>Lançamento de Transações</h3>
                     <div class="block1"></div>
@@ -104,26 +211,7 @@
                         
                         <label for="category">Categoria:</label>
                         <input type="text" id="category" name="category" required>
-                        
-                        <label for="subcategory">Subcategoria:</label>
-                        <input type="text" id="subcategory" name="subcategory">
-                        
-                        <label for="account">Conta Bancária/Carteira:</label>
-                        <select id="account" name="account" required>
-                            <option value="" disabled selected>Selecione uma opção</option>
-                            <option value="conta-corrente">Conta Corrente</option>
-                            <option value="conta-poupanca">Conta Poupança</option>
-                            <option value="cartao-credito">Cartão de Crédito</option>
-                        </select>
-                        <label for="paymentMethod">Método de Pagamento:</label>
-                        <select id="paymentMethod" name="payment_method" required>
-                            <option value="" disabled selected>Selecione o método de pagamento</option>
-                            <option value="dinheiro">Dinheiro</option>
-                            <option value="cartao-debito">Cartão de Débito</option>
-                            <option value="cartao-credito">Cartão de Crédito</option>
-                            <option value="transferencia">Transferência Bancária</option>
-                        </select>
-
+                      
                         <label for="transactionType">Tipo de Transação:</label>
                         <select id="transactionType" name="transaction_type" required>
                             <option value="" disabled selected>Selecione o tipo de transação</option>
@@ -131,10 +219,13 @@
                             <option value="despesa">Despesa</option>
                         </select>
                         
-                        <button type="submit">Lançar Transação</button>
+                        <button type="submit" class="button">Lançar Transação</button>
                     </form>
                 </div>
-            
+            </div>
+          </div>
+        </div>
+            </section>
                 <!-- Modal de Edição -->
                 <div id="editModal" class="modal">
                   <div class="modal-content container">
@@ -151,27 +242,7 @@
                           
                           <label for="edit-category">Categoria:</label>
                           <input type="text" id="edit-category" name="category" required>
-                          
-                          <label for="edit-subcategory">Subcategoria:</label>
-                          <input type="text" id="edit-subcategory" name="subcategory">
-                          
-                          <label for="edit-account">Conta Bancária/Carteira:</label>
-                          <select id="edit-account" name="account" required>
-                              <option value="" disabled selected>Selecione uma opção</option>
-                              <option value="conta-corrente">Conta Corrente</option>
-                              <option value="conta-poupanca">Conta Poupança</option>
-                              <option value="cartao-credito">Cartão de Crédito</option>
-                          </select>
-                
-                          <label for="edit-paymentMethod">Método de Pagamento:</label>
-                          <select id="edit-paymentMethod" name="payment_method" required>
-                              <option value="" disabled selected>Selecione o método de pagamento</option>
-                              <option value="dinheiro">Dinheiro</option>
-                              <option value="cartao-debito">Cartão de Débito</option>
-                              <option value="cartao-credito">Cartão de Crédito</option>
-                              <option value="transferencia">Transferência Bancária</option>
-                          </select>
-                
+                                          
                           <label for="edit-transactionType">Tipo de Transação:</label>
                           <select id="edit-transactionType" name="transaction_type" required>
                               <option value="" disabled selected>Selecione o tipo de transação</option>
@@ -184,8 +255,12 @@
                   </div>
                 </div>
                 
-                <!-- Tabela para exibir transações -->
-                <div class="container" id="removeTabela">
+                <!-- Modal para Aplicar Filtro -->
+<div id="filterModal" class="modal">
+  <div class="modal-content">
+      <span class="close" id="closeFilterModal">&times;</span>
+      <h3>Filtro</h3>
+      <div class="block1"></div>
                   <form id="filter-form">
                     <label for="start-date">Data Inicial:</label>
                     <input type="date" id="start-date" name="start_date">
@@ -195,26 +270,6 @@
                     
                     <label for="filter-category">Categoria:</label>
                     <input type="text" id="filter-category" name="category">
-                    
-                    <label for="filter-subcategory">Subcategoria:</label>
-                    <input type="text" id="filter-subcategory" name="subcategory">
-                    
-                    <label for="filter-account">Conta:</label>
-                    <select id="filter-account" name="account">
-                        <option value="">Todas as contas</option>
-                        <option value="conta-corrente">Conta Corrente</option>
-                        <option value="conta-poupanca">Conta Poupança</option>
-                        <option value="cartao-credito">Cartão de Crédito</option>
-                    </select>
-                
-                    <label for="filter-paymentMethod">Método de Pagamento:</label>
-                    <select id="filter-paymentMethod" name="payment_method">
-                        <option value="">Todos os métodos</option>
-                        <option value="dinheiro">Dinheiro</option>
-                        <option value="cartao-debito">Cartão de Débito</option>
-                        <option value="cartao-credito">Cartão de Crédito</option>
-                        <option value="transferencia">Transferência Bancária</option>
-                    </select>
                 
                     <label for="filter-transactionType">Tipo de Transação:</label>
                     <select id="filter-transactionType" name="transaction_type">
@@ -226,8 +281,10 @@
                     <button type="button" onclick="applyFilters()">Aplicar Filtros</button>
                     <button id="clear-filters-btn">Limpar Filtros</button>
                 </form>
-                
-
+              </div>
+            </div>
+            
+                <div class="container" id="removeTabela">
     <table id="transaction-table">
         <thead>
             <tr>
@@ -236,9 +293,6 @@
                 <th>Valor</th>
                 <th>Descrição</th>
                 <th>Categoria</th>
-                <th>Subcategoria</th>
-                <th>Conta</th>
-                <th>Método de Pagamento</th>
                 <th>Tipo</th>
                 <th>Ações</th>
             </tr>
@@ -248,35 +302,39 @@
             </tbody>
             
         </table>
-
+               
         <div id="pagination" class="pagination">
           <button id="prevPageBtn" class="page-btn">Anterior</button>
           <span id="pageNumbers"></span>
           <button id="nextPageBtn" class="page-btn">Próxima</button>
       </div>
-
-      
-            
-      <div class="container" id="dashboard">
-        <h2>Saldo Atual: <span id="current-balance">R$ 0.00</span></h2>
-        <h2>Receitas Totais: <span id="total-revenue">R$ 0.00</span></h2>
-        <h2>Despesas Totais: <span id="total-expenses">R$ 0.00</span></h2>
-    </div>
-    <div>
-        <canvas id="expenses-chart"></canvas>
-        <canvas id="revenue-chart"></canvas>
-    </div>
-    <div>
-        <h2>Despesas Mensais</h2>
-        <canvas id="monthly-expenses-chart"></canvas>
     </div>
 
 
+
+
+    <section id="metas">
+      <div class="container">
+          <h1>Metas</h1>
+          <form id="meta-form">
+              <input type="text" id="meta-name" placeholder="Nome da Meta" required>
+              <input type="date" id="meta-due-date" required>
+              <input type="number" id="meta-value" placeholder="Valor da Meta" required>
+              <button type="submit">Adicionar Meta</button>
+          </form>
+          <div id="metas-list"></div>
+      </div>
+    </section>
+  
+  
+    
+    
     </main>
     
 
     <footer>
         <div class="container">
+          <div class="nine columns"></div>
             <p>&copy; 2024 f1nancy - Sistema de Controle de Finanças (v1)</p>
         </div>
     </footer>
