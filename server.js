@@ -22,10 +22,10 @@ app.use(session({
 
 // Conexão com o banco de dados MySQL
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'financy'
+    host: 'sql10.freesqldatabase.com',
+    user: 'sql10710062',
+    password: '1Y5xlnDAJQ',
+    database: 'sql10710062'
 });
 
 connection.connect((err) => {
