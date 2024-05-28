@@ -1555,3 +1555,65 @@ button:hover {
 
 }
 
+/* Botão para alternar o tema */
+.theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    z-index: 1000;
+}
+
+/* Modo escuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Outros elementos no modo escuro */
+header.dark-mode, 
+section.dark-mode, 
+footer.dark-mode,
+.main_nav.dark-mode,
+.nav.dark-mode,
+.container.dark-mode {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+/* Manter cards e tabelas com fundo branco e texto preto */
+.cardReceita, 
+.cardDespesa, 
+.cardTotal,
+.table {
+    background-color: #ffffff; /* Fundo branco */
+    color: #000000; /* Texto preto */
+}
+
+/* Adicionando classes específicas para modo escuro */
+.cardReceita.dark-mode, 
+.cardDespesa.dark-mode, 
+.cardTotal.dark-mode,
+.table.dark-mode {
+    background-color: #ffffff; /* Fundo branco */
+    color: #000000; /* Texto preto */
+}
+
+/* Ajustar estilos para valores e células de tabela */
+.cardReceita .value, 
+.cardDespesa .value, 
+.cardTotal .value,
+.table th, 
+.table td {
+    color: #000000; /* Texto preto */
+}
+
+/* Ajuste de cor de borda para tabelas no modo escuro */
+.table.dark-mode th, 
+.table.dark-mode td {
+    border: 1px solid #dddddd; /* Borda clara */
+}
+

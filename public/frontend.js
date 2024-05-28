@@ -139,6 +139,31 @@ document.getElementById('registerButton')?.addEventListener('click', async () =>
         }
       });
 
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const darkModeClass = 'dark-mode';
+    
+        // Carrega o tema salvo no localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add(darkModeClass);
+            themeIcon.textContent = '🌙';
+        } else {
+            document.body.classList.remove(darkModeClass);
+            themeIcon.textContent = '☀️';
+        }
+    
+        themeToggleButton.addEventListener('click', function() {
+            document.body.classList.toggle(darkModeClass);
+            const isDarkMode = document.body.classList.contains(darkModeClass);
+            themeIcon.textContent = isDarkMode ? '🌙' : '☀️';
+            
+            // Salva a preferência do usuário no localStorage
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
+    });
+    
       
 // Função para excluir uma transação pelo ID
 async function deleteTransaction(id) {
