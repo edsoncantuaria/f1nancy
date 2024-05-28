@@ -20,7 +20,7 @@ app.use(session({
 
 // Conexão com o banco de dados MySQL usando pool de conexões
 const pool = mysql.createPool({
-    connectionLimit: 10, // Limite de conexões no pool
+    connectionLimit: 40, // Limite de conexões no pool
     host: 'sql10.freesqldatabase.com',
     user: 'sql10710062',
     password: '1Y5xlnDAJQ',
