@@ -443,6 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.reset();
                 form.querySelector('button[type="submit"]').innerText = 'Adicionar Transação';
                 delete form.dataset.transactionId;
+                window.location.reload();
             } else {
                 alert(data.error);
             }
