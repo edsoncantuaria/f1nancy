@@ -1088,6 +1088,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (response.ok) {
             loadMetas();
+            window.location.reload();
         } else {
             const error = await response.json();
             alert(`Erro ao finalizar meta: ${error.error}`);
