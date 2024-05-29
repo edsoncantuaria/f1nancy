@@ -164,7 +164,7 @@ document.getElementById('registerButton')?.addEventListener('click', async () =>
         });
     });
     
-      
+    
 // Função para excluir uma transação pelo ID
 async function deleteTransaction(id) {
     if (confirm('Tem certeza que deseja excluir esta transação?')) {
@@ -375,6 +375,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const removeContact = document.getElementById('contact');
             const removeTestimonial = document.getElementById('testimonial');
             const removeSistema = document.getElementById('sistema');
+            const navLogin = document.getElementById('loggIn');
+            const navLogout = document.getElementById('LoggOut');
 
 
 
@@ -387,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 removeAbout.style.display = 'none';
                 removeContact.style.display = 'none';
                 removeTestimonial.style.display = 'none';
+                navLogout.style.display = 'none'
 
             } else {
                 userInfo.textContent = '';
@@ -396,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 removeControle.style.display = 'none';
                 removeTabela.style.display = 'none';
                 removeSistema.style.display = 'none';
+                navLogin.style.display = 'none';
 
             }
         })

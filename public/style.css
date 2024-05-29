@@ -560,13 +560,22 @@ nav ul a:hover {
 	color: #CFCFCF;
 }
 .mobile-toggle {
-	display: none;
+	/* display: none;
 	cursor: pointer;
 	font-size: 20px;
 	position: absolute;
 	right: 22px;
 	top: 0;
-	width: 30px;
+	width: 30px; */
+
+	position: fixed;
+    top: 25px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    z-index: 1000;
 }
 
 @media only screen and (max-width: 766px) {
@@ -1616,4 +1625,3 @@ footer.dark-mode,
 .table.dark-mode td {
     border: 1px solid #dddddd; /* Borda clara */
 }
-

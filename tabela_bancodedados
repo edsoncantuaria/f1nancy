@@ -28,5 +28,6 @@ CREATE TABLE meta (
   FOREIGN KEY (user_id) REFERENCES usuario(id)
 );
 
+
 - Fazer o sistema funcionar com usuario e senha
 express mysql2 bcryptjs jsonwebtoken body-parser nodemailer nodemailer-sendgrid 
