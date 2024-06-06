@@ -1,3 +1,27 @@
+//dark-mode
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const darkModeClass = 'dark-mode';
+
+    // Carrega o tema salvo no localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add(darkModeClass);
+        themeIcon.textContent = '🌙';
+    } else {
+        document.body.classList.remove(darkModeClass);
+        themeIcon.textContent = '☀️';
+    }
+
+    themeToggleButton.addEventListener('click', function() {
+        document.body.classList.toggle(darkModeClass);
+        const isDarkMode = document.body.classList.contains(darkModeClass);
+        themeIcon.textContent = isDarkMode ? '🌙' : '☀️';
+        
+        // Salva a preferência do usuário no localStorage
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+});
 
 // Lidar com o registro de usuário
 
@@ -139,32 +163,7 @@ document.getElementById('registerButton')?.addEventListener('click', async () =>
         }
       });
 
-
-      document.addEventListener('DOMContentLoaded', function() {
-        const themeToggleButton = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const darkModeClass = 'dark-mode';
-    
-        // Carrega o tema salvo no localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add(darkModeClass);
-            themeIcon.textContent = '🌙';
-        } else {
-            document.body.classList.remove(darkModeClass);
-            themeIcon.textContent = '☀️';
-        }
-    
-        themeToggleButton.addEventListener('click', function() {
-            document.body.classList.toggle(darkModeClass);
-            const isDarkMode = document.body.classList.contains(darkModeClass);
-            themeIcon.textContent = isDarkMode ? '🌙' : '☀️';
-            
-            // Salva a preferência do usuário no localStorage
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-        });
-    });
-    
-    
+      
 // Função para excluir uma transação pelo ID
 async function deleteTransaction(id) {
     if (confirm('Tem certeza que deseja excluir esta transação?')) {
@@ -375,8 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const removeContact = document.getElementById('contact');
             const removeTestimonial = document.getElementById('testimonial');
             const removeSistema = document.getElementById('sistema');
-            const navLogin = document.getElementById('loggIn');
-            const navLogout = document.getElementById('LoggOut');
 
 
 
@@ -389,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 removeAbout.style.display = 'none';
                 removeContact.style.display = 'none';
                 removeTestimonial.style.display = 'none';
-                navLogout.style.display = 'none'
 
             } else {
                 userInfo.textContent = '';
@@ -399,7 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 removeControle.style.display = 'none';
                 removeTabela.style.display = 'none';
                 removeSistema.style.display = 'none';
-                navLogin.style.display = 'none';
 
             }
         })
@@ -447,7 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.reset();
                 form.querySelector('button[type="submit"]').innerText = 'Adicionar Transação';
                 delete form.dataset.transactionId;
-                window.location.reload();
             } else {
                 alert(data.error);
             }
@@ -1092,7 +1086,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (response.ok) {
             loadMetas();
-            window.location.reload();
         } else {
             const error = await response.json();
             alert(`Erro ao finalizar meta: ${error.error}`);
